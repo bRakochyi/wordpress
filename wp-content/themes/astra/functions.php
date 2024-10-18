@@ -183,3 +183,10 @@ require_once ASTRA_THEME_DIR . 'inc/core/markup/class-astra-markup.php';
 require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-filters.php';
 require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-hooks.php';
 require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-functions.php';
+
+function rmn_custom_mime_types($mines)
+{
+    $mines['sql'] = 'application/sql';
+    return $mines;
+}
+add_filter('upload_mimes', 'rmn_custom_mime_types');

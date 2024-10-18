@@ -79,7 +79,13 @@ $table_prefix = 'wpgg_';
  *
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
-define( 'WP_DEBUG', false );
+/** On error */
+error_reporting(E_ALL); // включаем вывод ошибок
+ini_set('display_errors', 1); // включаем вывод ошибок на экран
+define('WP_DEBUG', true);
+define('WP_DEBUG_DISPLAY', true);
+
+define( 'ALLOW_UNFILTERED_UPLOADS', true );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
@@ -94,3 +100,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';
+
+
+
+
+/** Off error
+ *
+ * error_reporting(0); // выключаем вывод информации об ошибках
+ * ini_set('display_errors', 0); // выключаем вывод информации об ошибках на экран
+ * define('WP_DEBUG', false);
+ * define('WP_DEBUG_DISPLAY', false);
+ */
