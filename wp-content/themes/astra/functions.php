@@ -190,3 +190,56 @@ function rmn_custom_mime_types($mines)
     return $mines;
 }
 add_filter('upload_mimes', 'rmn_custom_mime_types');
+
+// Add button for log-in or log-out users.
+
+add_filter('wp_nav_menu_items', 'add_login_logout_link', 10, 2);
+function add_login_logout_link($items, $args)
+{
+    ob_start();
+    wp_loginout('index.php');
+    $loginoutlink = ob_get_contents() ;
+    ob_get_clean();
+    $items .= '<li>'. $loginoutlink . '</li>';
+    return $items;
+}
+
+// додавання форм в профіль адмінки
+// когда пользователь сам редактирует свой профиль
+add_action( 'show_user_profile', 'true_show_profile_fields' );
+// когда чей-то профиль редактируется админом например
+add_action( 'edit_user_profile', 'true_show_profile_fields' );
+
+function true_show_profile_fields( $user ) {
+
+    // выводим заголовок для наших полей
+    echo '<h3>Дополнительная информация</h3>';
+
+    // поля в профиле находятся в рамметке таблиц <table>
+    echo '<table class="form-table">';
+
+    // добавляем поле город
+    $user_job_title = get_the_author_meta( 'job-title', $user->ID );
+    $user_phone = get_the_author_meta( 'phone', $user->ID );
+    echo '<tr><th><label for="job-title">Должность</label></th>
+ 	<td><input type="text" name="job-title" id="job-title" value="' . esc_attr( $user_job_title ) . '" class="regular-text" /></td>
+	</tr>';
+    echo '<tr><th><label for="phone">Должность</label></th>
+ 	<td><input type="text" name="phone" id="phone" value="' . esc_attr( $user_phone ) . '" class="regular-text" /></td>
+	</tr>';
+
+
+    echo '</table>';
+}
+
+//збереження даних в профілі в абмінці
+// когда пользователь сам редактирует свой профиль
+add_action( 'personal_options_update', 'true_save_profile_fields' );
+// когда чей-то профиль редактируется админом например
+add_action( 'edit_user_profile_update', 'true_save_profile_fields' );
+
+function true_save_profile_fields( $user_id ) {
+
+    update_user_meta( $user_id, 'job-title', sanitize_text_field( $_POST[ 'job-title' ] ) );
+    update_user_meta( $user_id, 'phone', sanitize_text_field( $_POST[ 'phone' ] ) );
+}
