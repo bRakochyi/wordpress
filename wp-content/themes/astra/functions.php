@@ -184,6 +184,8 @@ require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-filters.php';
 require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-hooks.php';
 require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-functions.php';
 
+
+// Додавання форматів файлів для завантаження на сайт
 function rmn_custom_mime_types($mines)
 {
     $mines['sql'] = 'application/sql';
@@ -243,3 +245,123 @@ function true_save_profile_fields( $user_id ) {
     update_user_meta( $user_id, 'job-title', sanitize_text_field( $_POST[ 'job-title' ] ) );
     update_user_meta( $user_id, 'phone', sanitize_text_field( $_POST[ 'phone' ] ) );
 }
+
+/**
+ *
+ * Cтворення кастомної ролі для сайту (без доступу в адмінку)
+ *
+ */
+
+$result = add_role('user', __('Користувач'),
+    array(
+        'read' => false,
+        'delete_posts' => false,
+        'edit_posts' => false,
+        'delete_published_posts' => false,
+        'edit_published_posts' => false,
+        'publish_posts' => false,
+        'upload_files' => false,
+        'delete_others_pages' => false,
+        'delete_others_posts' => false,
+        'delete_pages' => false,
+        'delete_private_pages' => false,
+        'delete_private_posts' => false,
+        'delete_published_pages' => false,
+        'edit_others_pages' => false,
+        'edit_others_posts' => false,
+        'edit_pages' => false,
+        'edit_private_pages' => false,
+        'edit_private_posts' => false,
+        'edit_published_pages' => false,
+        'manage_categories' => false,
+        'manage_links' => false,
+        'moderate_comments' => false,
+        'publish_pages' => false,
+        'read_private_pages' => false,
+        'read_private_posts' => false,
+        'unfiltered_html' => false,
+        'activate_plugins' => false,
+        'create_users' => false,
+        'deactivate_plugins' => false,
+        'delete_plugins' => false,
+        'delete_themes' => false,
+        'delete_users' => false,
+        'edit_dashboard' => false,
+        'edit_files' => false,
+        'edit_plugins' => false,
+        'edit_theme_options' => false,
+        'edit_themes' => false,
+        'edit_users' => false,
+        'export' => false,
+        'import' => false,
+        'install_languages' => false,
+        'install_plugins' => false,
+        'install_themes' => false,
+        'list_users' => false,
+        'manage_options' => false,
+        'promote_users' => false,
+        'remove_users' => false,
+        'switch_themes' => false,
+        'update_core' => false,
+        'update_languages' => false,
+        'update_plugins' => false,
+        'update_themes' => false,
+        'unfiltered_upload' => false,
+        'manage_network_options' => false,
+        'manage_network_plugins' => false,
+        'manage_network_themes' => false,
+        'manage_network_users' => false,
+        'manage_network' => false,
+        'manage_sites' => false,
+        'setup_network' => false,
+        'upgrade_network' => false
+    ));
+
+/**
+ *
+ * Редірект на головну сторінку сайту після авторизації
+ *
+ */
+
+function redirect_users_after_login() {
+    $user = wp_get_current_user();
+    $roles = ( array ) $user->roles;
+
+
+    // Редiрект для пiдписників
+    if ( $roles[0] == 'subscriber' ) {
+        wp_redirect( home_url() );
+        exit;
+    }
+
+
+    // Редiрект для користувачів
+    if ( $roles[0] == 'user' ) {
+        wp_redirect( home_url() );
+        exit;
+    }
+
+}
+add_action( 'admin_init', 'redirect_users_after_login' );
+
+//Закриття доступу до сайту для не авторизованих користувачів і редірект для них на сторінку авторизації,
+//крім тих хто вручну її вводить
+add_action( 'template_redirect',
+    function() {
+    if ( ! is_user_logged_in() && ! is_page( 'wp-login' ) ) {
+        auth_redirect();
+    }
+});
+
+/**
+ *
+ * Закриття(переадресацiя) сторінки авторизації для вже авторизованих користувачів
+ *
+ */
+function restrict_access_for_logged_in_users() {
+    // Замените 'your-page-slug' на слаг вашей страницы
+    if (is_user_logged_in() && (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false)) {
+        wp_redirect( home_url('index.php/edit-account') );
+    }
+}
+add_action('init', 'restrict_access_for_logged_in_users');
