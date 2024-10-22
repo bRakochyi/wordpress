@@ -40,7 +40,7 @@ function wpspec_custom_login_logo_url_title() {
     return 'ТОВ ЛЕП';
 }
 
-
+// ДОДАВАННЯ ПОЛІВ РЕЄСТРАЦІЇ
 /**
  * @snippet       Add fields in registration's form
  */
@@ -51,6 +51,17 @@ function true_show_fields() {
     $job_title = ! empty( $_POST[ 'job-title' ] ) ? $_POST[ 'job-title' ] : '';
     $phone = ! empty( $_POST[ 'phone' ] ) ? $_POST[ 'phone' ] : '';
     ?>
+    <p>
+        <label for="password">Пароль<br/>
+            <input id="password" class="input" type="password" tabindex="30" size="25" value="" name="password"/>
+        </label>
+    </p>
+    <p>
+        <label for="repeat_password">Подтверждение пароля<br/>
+            <input id="repeat_password" class="input" type="password" tabindex="40" size="25" value=""
+                   name="repeat_password"/>
+        </label>
+    </p>
     <p>
         <label for="job-title">Должность</label>
         <input type="text" id="job-title" name="job-title" class="input" placeholder="Должность" value="<?php echo esc_attr( $job_title ) ?>" size="25" />
@@ -68,9 +79,16 @@ add_filter( 'registration_errors', 'true_check_fields', 25, 3 );
 
 function true_check_fields( $errors, $sanitized_user_login, $user_email ) {
 
+    if ( $_POST['password'] !== $_POST['repeat_password'] )
+    {
+        $errors->add( 'passwords_not_matched', "<strong>ERROR</strong>: Passwords must match" );
+    }
+    if ( strlen( $_POST['password'] ) < 4 )
+    {
+        $errors->add( 'password', "<strong>ERROR</strong>: Passwords must be at least six characters long" );
+    }
     /*
-     * Функція перевірки полів, щоб вони були заповнені, а також щоб не реєструвало ще раз попередньо зареєстрований
-     * номер телефону
+     * Функція перевірки полів, щоб вони були заповнені
      */
     if( empty( $_POST[ 'job-title' ] ) ) {
         $errors->add( 'empty_job-title', '<strong>Ошибка:</strong> Пожалуйста, укажите должность.' );
@@ -83,13 +101,20 @@ function true_check_fields( $errors, $sanitized_user_login, $user_email ) {
     return $errors;
 
 }
+add_action( 'register_post', 'true_check_fields', 10, 3 );
 
 // Записування значень полів в метадані, для вже створених користувачів
 
-add_action( 'user_register', 'true_register_fields' );
+add_action( 'user_register', 'true_register_fields', 100 );
 
 function true_register_fields( $user_id ) {
-
+    $userdata       = [];
+    $userdata['ID'] = $user_id;
+    if ( $_POST['password'] !== '' ) {
+        $userdata['user_pass'] = $_POST['password'];
+    }
+    wp_update_user( $userdata );
+    wp_set_auth_cookie( $user_id );
     update_user_meta( $user_id, 'job-title', sanitize_text_field( $_POST[ 'job-title' ] ) );
     update_user_meta( $user_id, 'phone', sanitize_text_field( $_POST[ 'phone' ] ) );
 
