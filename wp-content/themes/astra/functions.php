@@ -220,13 +220,10 @@ function true_show_profile_fields( $user ) {
     // поля в профиле находятся в рамметке таблиц <table>
     echo '<table class="form-table">';
 
-    // добавляем поле город
-    $user_job_title = get_the_author_meta( 'job-title', $user->ID );
+    // добавляем поле
     $user_phone = get_the_author_meta( 'phone', $user->ID );
-    echo '<tr><th><label for="job-title">Должность</label></th>
- 	<td><input type="text" name="job-title" id="job-title" value="' . esc_attr( $user_job_title ) . '" class="regular-text" /></td>
-	</tr>';
-    echo '<tr><th><label for="phone">Должность</label></th>
+
+    echo '<tr><th><label for="phone">Телефон</label></th>
  	<td><input type="text" name="phone" id="phone" value="' . esc_attr( $user_phone ) . '" class="regular-text" /></td>
 	</tr>';
 
@@ -242,7 +239,6 @@ add_action( 'edit_user_profile_update', 'true_save_profile_fields' );
 
 function true_save_profile_fields( $user_id ) {
 
-    update_user_meta( $user_id, 'job-title', sanitize_text_field( $_POST[ 'job-title' ] ) );
     update_user_meta( $user_id, 'phone', sanitize_text_field( $_POST[ 'phone' ] ) );
 }
 
@@ -253,6 +249,202 @@ function true_save_profile_fields( $user_id ) {
  */
 
 $result = add_role('user', __('Користувач'),
+    array(
+        'read' => false,
+        'delete_posts' => false,
+        'edit_posts' => false,
+        'delete_published_posts' => false,
+        'edit_published_posts' => false,
+        'publish_posts' => false,
+        'upload_files' => false,
+        'delete_others_pages' => false,
+        'delete_others_posts' => false,
+        'delete_pages' => false,
+        'delete_private_pages' => false,
+        'delete_private_posts' => false,
+        'delete_published_pages' => false,
+        'edit_others_pages' => false,
+        'edit_others_posts' => false,
+        'edit_pages' => false,
+        'edit_private_pages' => false,
+        'edit_private_posts' => false,
+        'edit_published_pages' => false,
+        'manage_categories' => false,
+        'manage_links' => false,
+        'moderate_comments' => false,
+        'publish_pages' => false,
+        'read_private_pages' => false,
+        'read_private_posts' => false,
+        'unfiltered_html' => false,
+        'activate_plugins' => false,
+        'create_users' => false,
+        'deactivate_plugins' => false,
+        'delete_plugins' => false,
+        'delete_themes' => false,
+        'delete_users' => false,
+        'edit_dashboard' => false,
+        'edit_files' => false,
+        'edit_plugins' => false,
+        'edit_theme_options' => false,
+        'edit_themes' => false,
+        'edit_users' => false,
+        'export' => false,
+        'import' => false,
+        'install_languages' => false,
+        'install_plugins' => false,
+        'install_themes' => false,
+        'list_users' => false,
+        'manage_options' => false,
+        'promote_users' => false,
+        'remove_users' => false,
+        'switch_themes' => false,
+        'update_core' => false,
+        'update_languages' => false,
+        'update_plugins' => false,
+        'update_themes' => false,
+        'unfiltered_upload' => false,
+        'manage_network_options' => false,
+        'manage_network_plugins' => false,
+        'manage_network_themes' => false,
+        'manage_network_users' => false,
+        'manage_network' => false,
+        'manage_sites' => false,
+        'setup_network' => false,
+        'upgrade_network' => false
+    ));
+
+
+$result = add_role('manager', __('Менеджер'),
+    array(
+        'read' => false,
+        'delete_posts' => false,
+        'edit_posts' => false,
+        'delete_published_posts' => false,
+        'edit_published_posts' => false,
+        'publish_posts' => false,
+        'upload_files' => false,
+        'delete_others_pages' => false,
+        'delete_others_posts' => false,
+        'delete_pages' => false,
+        'delete_private_pages' => false,
+        'delete_private_posts' => false,
+        'delete_published_pages' => false,
+        'edit_others_pages' => false,
+        'edit_others_posts' => false,
+        'edit_pages' => false,
+        'edit_private_pages' => false,
+        'edit_private_posts' => false,
+        'edit_published_pages' => false,
+        'manage_categories' => false,
+        'manage_links' => false,
+        'moderate_comments' => false,
+        'publish_pages' => false,
+        'read_private_pages' => false,
+        'read_private_posts' => false,
+        'unfiltered_html' => false,
+        'activate_plugins' => false,
+        'create_users' => false,
+        'deactivate_plugins' => false,
+        'delete_plugins' => false,
+        'delete_themes' => false,
+        'delete_users' => false,
+        'edit_dashboard' => false,
+        'edit_files' => false,
+        'edit_plugins' => false,
+        'edit_theme_options' => false,
+        'edit_themes' => false,
+        'edit_users' => false,
+        'export' => false,
+        'import' => false,
+        'install_languages' => false,
+        'install_plugins' => false,
+        'install_themes' => false,
+        'list_users' => false,
+        'manage_options' => false,
+        'promote_users' => false,
+        'remove_users' => false,
+        'switch_themes' => false,
+        'update_core' => false,
+        'update_languages' => false,
+        'update_plugins' => false,
+        'update_themes' => false,
+        'unfiltered_upload' => false,
+        'manage_network_options' => false,
+        'manage_network_plugins' => false,
+        'manage_network_themes' => false,
+        'manage_network_users' => false,
+        'manage_network' => false,
+        'manage_sites' => false,
+        'setup_network' => false,
+        'upgrade_network' => false
+    ));
+
+$result = add_role('paymaster', __('Касир'),
+    array(
+        'read' => false,
+        'delete_posts' => false,
+        'edit_posts' => false,
+        'delete_published_posts' => false,
+        'edit_published_posts' => false,
+        'publish_posts' => false,
+        'upload_files' => false,
+        'delete_others_pages' => false,
+        'delete_others_posts' => false,
+        'delete_pages' => false,
+        'delete_private_pages' => false,
+        'delete_private_posts' => false,
+        'delete_published_pages' => false,
+        'edit_others_pages' => false,
+        'edit_others_posts' => false,
+        'edit_pages' => false,
+        'edit_private_pages' => false,
+        'edit_private_posts' => false,
+        'edit_published_pages' => false,
+        'manage_categories' => false,
+        'manage_links' => false,
+        'moderate_comments' => false,
+        'publish_pages' => false,
+        'read_private_pages' => false,
+        'read_private_posts' => false,
+        'unfiltered_html' => false,
+        'activate_plugins' => false,
+        'create_users' => false,
+        'deactivate_plugins' => false,
+        'delete_plugins' => false,
+        'delete_themes' => false,
+        'delete_users' => false,
+        'edit_dashboard' => false,
+        'edit_files' => false,
+        'edit_plugins' => false,
+        'edit_theme_options' => false,
+        'edit_themes' => false,
+        'edit_users' => false,
+        'export' => false,
+        'import' => false,
+        'install_languages' => false,
+        'install_plugins' => false,
+        'install_themes' => false,
+        'list_users' => false,
+        'manage_options' => false,
+        'promote_users' => false,
+        'remove_users' => false,
+        'switch_themes' => false,
+        'update_core' => false,
+        'update_languages' => false,
+        'update_plugins' => false,
+        'update_themes' => false,
+        'unfiltered_upload' => false,
+        'manage_network_options' => false,
+        'manage_network_plugins' => false,
+        'manage_network_themes' => false,
+        'manage_network_users' => false,
+        'manage_network' => false,
+        'manage_sites' => false,
+        'setup_network' => false,
+        'upgrade_network' => false
+    ));
+
+$result = add_role('technical', __('Технік'),
     array(
         'read' => false,
         'delete_posts' => false,
@@ -361,7 +553,40 @@ add_action( 'template_redirect',
 function restrict_access_for_logged_in_users() {
     // Замените 'your-page-slug' на слаг вашей страницы
     if (is_user_logged_in() && (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false)) {
-        wp_redirect( home_url('index.php/edit-account') );
+        wp_redirect( home_url('index.php/account') );
     }
 }
 add_action('init', 'restrict_access_for_logged_in_users');
+
+
+// додавання вибору ролей на сторынку реэстрации
+// Добавляем поле выбора роли на страницу регистрации
+function add_role_to_registration_form() {
+    ?>
+    <p>
+        <label for="role">Виберіть посаду<br />
+            <select name="role" id="role">
+                <option value="manager">Менеджер</option>
+                <option value="paymaster">Касир</option>
+                <option value="technical">Технік</option>
+            </select>
+        </label>
+    </p><br>
+    <?php
+}
+add_action( 'register_form', 'add_role_to_registration_form' );
+
+// Сохраняем выбранную роль при регистрации
+function save_user_role( $user_id ) {
+    if ( isset( $_POST['role'] ) ) {
+        $selected_role = $_POST['role'];
+        $allowed_roles = ['manager', 'paymaster', 'technical']; // Ограничение на выбор ролей
+
+        if ( in_array( $selected_role, $allowed_roles ) ) {
+            $user = new WP_User( $user_id );
+            $user->set_role( $selected_role );
+        }
+    }
+}
+add_action( 'user_register', 'save_user_role' );
+

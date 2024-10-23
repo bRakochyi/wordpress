@@ -76,8 +76,7 @@ if( $_POST['first_name'] && $_POST['last_name'] && is_email($_POST['email']) ) {
         'last_name' => $_POST['last_name'],
         'display_name' => $_POST['first_name'] . ' ' . $_POST['last_name'] ));
 
-    // ну и должность не забываем обновить
-    update_user_meta( $user_ID, 'job-title', $_POST['job-title']);
+    // ну не забываем обновить
     update_user_meta($user_ID, 'phone', $_POST['phone']);
 } else {
     // не все поля заполнены - перенеправляем
