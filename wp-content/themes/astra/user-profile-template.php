@@ -13,18 +13,17 @@ if ( astra_page_layout() == 'left-sidebar' ) {
     get_sidebar();
 }
 ?>
+<?php
 
-    <div id="primary" <?php astra_primary_class(); ?>>
-        <?php
-        astra_primary_content_top();
+astra_primary_content_top();
 
-        astra_content_loop();
+astra_content_loop();
 
-        astra_pagination();
+astra_pagination();
 
-        astra_primary_content_bottom();
-        ?>
-    </div><!-- #primary -->
+astra_primary_content_bottom();
+?>
+
 
 <?php
 global $user_ID;
@@ -40,6 +39,9 @@ if( !$user_ID ) {
     <html>
     <head>
         <style type="text/css">
+            TABLE {
+                border: none !important;
+            }
             <style type="text/css">
             TABLE {
                 width: 300px; /* Ширина таблицы */
@@ -47,7 +49,8 @@ if( !$user_ID ) {
             TD, TH {
                 text-align: left; /* Выравнивание по левому краю */
                 border-collapse: collapse; /* Убираем двойные линии между ячейками */
-                border: 2px solid white; /* Прячем рамку вокруг таблицы */
+                border: none !important; /* Прячем рамку вокруг таблицы */
+            }
         </style>
     </head>
     <body>

@@ -1,0 +1,7 @@
+2024-10-24 10:52:47 - wpgg_rcp_discounts table upgrade to 202003311 successful.
+2024-10-24 10:52:47 - wpgg_rcp_discounts table upgrade to 202003312 successful.
+2024-10-24 10:52:47 - wpgg_rcp_discounts table upgrade to 202003313 successful.
+2024-10-24 12:54:08 - Starting rcp_check_for_expired_users() cron job.
+2024-10-24 12:54:08 - Starting rcp_check_for_soon_to_expire_users() cron job.
+2024-10-24 12:54:08 - Starting rcp_check_member_counts() cron job.
+2024-10-24 12:54:08 - Starting rcp_mark_abandoned_payments() cron job.
