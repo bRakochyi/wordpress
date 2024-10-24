@@ -195,16 +195,16 @@ add_filter('upload_mimes', 'rmn_custom_mime_types');
 
 // Add button for log-in or log-out users.
 
-add_filter('wp_nav_menu_items', 'add_login_logout_link', 10, 2);
-function add_login_logout_link($items, $args)
-{
-    ob_start();
-    wp_loginout('index.php');
-    $loginoutlink = ob_get_contents() ;
-    ob_get_clean();
-    $items .= '<li>'. $loginoutlink . '</li>';
-    return $items;
-}
+//add_filter('wp_nav_menu_items', 'add_login_logout_link', 10, 2);
+//function add_login_logout_link($items, $args)
+//{
+//    ob_start();
+//    wp_loginout('index.php');
+//    $loginoutlink = ob_get_contents() ;
+//    ob_get_clean();
+//    $items .= '<li>'. $loginoutlink . '</li>';
+//    return $items;
+//}
 
 // додавання форм в профіль адмінки
 // когда пользователь сам редактирует свой профиль
@@ -590,3 +590,14 @@ function save_user_role( $user_id ) {
 }
 add_action( 'user_register', 'save_user_role' );
 
+// видалення запису перед таблицею коментаря
+function remove_logged_in_message() {
+    return '';
+}
+add_filter( 'comment_form_logged_in', 'remove_logged_in_message' );
+
+
+//приховування панелы адмыныстратора у вверху сайту у всіх крім адміна
+if ( !current_user_can('administrator') ) {
+    add_filter('show_admin_bar', '__return_false');
+}

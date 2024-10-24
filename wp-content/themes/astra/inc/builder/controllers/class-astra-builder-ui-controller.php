@@ -419,6 +419,8 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 						<a class="<?php echo esc_attr( implode( ' ', $link_classes ) ); ?>" role="link" aria-label="<?php esc_attr_e( 'Account icon link', 'astra' ); ?>" <?php echo esc_attr( $link_href . ' ' . $new_tab . ' ' . $link_rel ); ?> >
 
 							<?php
+                            global $user_ID;
+                            $current_user = get_user_by( 'id', $user_ID );
 							if ( 'avatar' === $login_profile_type ) {
 
 								echo get_avatar( get_current_user_id() );
@@ -434,7 +436,7 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 								}
 
 								?>
-								<span class="ast-header-account-text"><?php echo esc_html( $logged_in_text ); ?></span>
+								<span class="ast-header-account-text"><?php echo 'Привіт ' . esc_html( $current_user->first_name ); ?></span>
 							<?php } ?>
 						</a>
 						<?php

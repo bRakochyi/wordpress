@@ -14,17 +14,15 @@ if ( astra_page_layout() == 'left-sidebar' ) {
 }
 ?>
 
-<div id="primary" <?php astra_primary_class(); ?>>
-		<?php
-		astra_primary_content_top();
+<?php
+astra_primary_content_top();
 
-		astra_content_loop();
+astra_content_loop();
 
-		astra_pagination();
+astra_pagination();
 
-		astra_primary_content_bottom();
+astra_primary_content_bottom();
 		?>
-	</div><!-- #primary -->
 
 <?php
 global $user_ID;

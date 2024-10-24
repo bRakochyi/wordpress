@@ -414,7 +414,7 @@ class Astra_Breadcrumb_Trail {
 		$defaults = array(
 			'browse'              => esc_html__( 'Browse:',                               'astra' ),
 			'aria_label'          => esc_attr_x( 'Breadcrumbs', 'breadcrumbs aria label', 'astra' ),
-			'home'                => esc_html__( 'Home',                                  'astra' ),
+			'home'                => esc_html__( 'Головна',                                  'astra' ),
 			'error_404'           => esc_html__( '404 Not Found',                         'astra' ),
 			'archives'            => esc_html__( 'Archives',                              'astra' ),
 			// Translators: %s is the search query.
