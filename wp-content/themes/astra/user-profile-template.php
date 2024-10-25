@@ -46,10 +46,13 @@ if( !$user_ID ) {
             TABLE {
                 width: 300px; /* Ширина таблицы */
             }
-            TD, TH {
+
+            TR, TD, TH {
+                height: 30px;
                 text-align: left; /* Выравнивание по левому краю */
                 border-collapse: collapse; /* Убираем двойные линии между ячейками */
                 border: none !important; /* Прячем рамку вокруг таблицы */
+                background-color: rgba(255, 255, 255, 0.1);
             }
         </style>
     </head>
@@ -57,22 +60,24 @@ if( !$user_ID ) {
 
     <table class="form-table">
 
-        <tr><th><label for="first_name">Ваше ім'я</label></th>
-            <td><input type="text" name="first_name" id="first_name" readonly="readonly" value="<?php echo $userdata->first_name ?>" class="regular-text" /></td>
+
+        <tr><th><p for="first_name">Ваше ім'я</p></th>
+            <td><p class="text-color"> <?php echo $userdata->first_name ?></p></td>
+
+        <tr><th><p for="last_name">Ваше прізвище</p></th>
+            <td><p class="text-color"><?php echo $userdata->last_name ?></p></td>
         </tr>
-        <tr><th><label for="last_name">Ваше прізвище</label></th>
-            <td><input type="text" name="last_name" id="last_name" readonly="readonly" value="<?php echo $userdata->last_name ?>" class="regular-text" /></td>
+        <tr><th><p for="email">Ваша електронна пошта</p></th>
+            <td><p class="text-color"><?php echo $userdata->user_email ?></p></td>
         </tr>
-        <tr><th><label for="email">Ваша електронна пошта</label></th>
-            <td><input type="text" name="email" id="email" readonly="readonly" value="<?php echo $userdata->user_email ?>" class="regular-text" /></td>
+        <tr><th><p for="phone">Ваш номер телефону</p></th>
+            <td><p class="text-color"><?php echo get_user_meta($user_ID, 'phone', true) ?></p></td>
         </tr>
-        <tr><th><label for="phone">Ваш номер телефону</label></th>
-            <td><input type="text" name="phone" id="phone" readonly="readonly" value="<?php echo get_user_meta($user_ID, 'phone', true) ?>" class="regular-text" /></td>
-        </tr>
-        <tr><th><label>Для зміни Ваших даних натисніть </label></th>
+        <tr><th><p>Для зміни Ваших даних натисніть кнопку "Змінити"</p></th>
             <td>
                 <form action="http://localhost/wordpress/index.php/edit-account">
-                    <button>змінити</button>
+                    <button>Змінити</button>
+
                 </form>
             </td>
         </tr>
