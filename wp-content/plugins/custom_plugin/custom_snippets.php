@@ -63,10 +63,6 @@ function true_show_fields() {
         </label>
     </p>
     <p>
-        <label for="job-title">Должность</label>
-        <input type="text" id="job-title" name="job-title" class="input" placeholder="Должность" value="<?php echo esc_attr( $job_title ) ?>" size="25" />
-    </p>
-    <p>
         <label for="phone">Телефон</label>
         <input type="text" id="phone" name="phone" class="input" placeholder="Телефон" value="<?php echo esc_attr( $phone ) ?>" size="25" />
     </p>
@@ -90,9 +86,6 @@ function true_check_fields( $errors, $sanitized_user_login, $user_email ) {
     /*
      * Функція перевірки полів, щоб вони були заповнені
      */
-    if( empty( $_POST[ 'job-title' ] ) ) {
-        $errors->add( 'empty_job-title', '<strong>Ошибка:</strong> Пожалуйста, укажите должность.' );
-    }
 
     if( empty( $_POST[ 'phone' ] ) ) {
         $errors->add( 'empty_phone', '<strong>Ошибка:</strong> Пожалуйста, укажите номер телефона.' );
@@ -115,7 +108,6 @@ function true_register_fields( $user_id ) {
     }
     wp_update_user( $userdata );
     wp_set_auth_cookie( $user_id );
-    update_user_meta( $user_id, 'job-title', sanitize_text_field( $_POST[ 'job-title' ] ) );
     update_user_meta( $user_id, 'phone', sanitize_text_field( $_POST[ 'phone' ] ) );
 
 }
@@ -135,17 +127,12 @@ function true_admin_registration_form( $operation ) {
         return;
     }
 
-    $job_title = ! empty( $_POST[ 'job-title' ] ) ? $_POST[ 'job-title' ] : '';
     $phone = ! empty( $_POST[ 'phone' ] ) ? $_POST[ 'phone' ] : '';
 
     ?>
     <h3>Дополнительная информация</h3>
 
     <table class="form-table">
-        <tr class="form-field">
-            <th><label for="job-title">Должность</label></th>
-            <td><input id="job-title" name="job-title" class="input" type="text" placeholder="Должность" value="<?php echo esc_attr( $job_title ) ?>" /></td>
-        </tr>
         <tr class="form-field">
             <th><label for="phone">Телефон</label></th>
             <td><input id="phone" name="phone" class="input" type="text" placeholder="Телефон" value="<?php echo esc_attr( $phone ) ?>" /></td>
@@ -164,9 +151,6 @@ function true_validate_fields_in_admin( $errors, $update, $user ) {
         return;
     }
 
-    if( empty( $_POST[ 'job-title' ] ) ) {
-        $errors->add( 'empty_job-title', '<strong>ОШИБКА:</strong> Пожалуйста, укажите должность.' );
-    }
 
     if( empty( $_POST[ 'phone' ] ) ) {
         $errors->add( 'empty_phone', '<strong>ОШИБКА:</strong> Пожалуйста, укажите номер телефона.' );
@@ -180,7 +164,6 @@ add_action( 'edit_user_created_user', 'save_register_fields' );
 
 function save_register_fields( $user_id ) {
 
-    update_user_meta( $user_id, 'job-title', sanitize_text_field( $_POST[ 'job-title' ] ) );
     update_user_meta( $user_id, 'phone', sanitize_text_field( $_POST[ 'phone' ] ) );
 
 }

@@ -46,6 +46,7 @@ if( !$user_ID ) {
             TABLE {
                 width: 300px; /* Ширина таблицы */
             }
+
             TR, TD, TH {
                 height: 30px;
                 text-align: left; /* Выравнивание по левому краю */
@@ -58,6 +59,7 @@ if( !$user_ID ) {
     <body>
 
     <table class="form-table">
+
 
         <tr><th><p for="first_name">Ваше ім'я</p></th>
             <td><p class="text-color"> <?php echo $userdata->first_name ?></p></td>
@@ -75,6 +77,7 @@ if( !$user_ID ) {
             <td>
                 <form action="http://localhost/wordpress/index.php/edit-account">
                     <button>Змінити</button>
+
                 </form>
             </td>
         </tr>

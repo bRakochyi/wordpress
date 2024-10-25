@@ -1,6 +1,6 @@
 <?php
 /*
- * Template name: Шаблон профиля пользователя
+ * Template name: Шаблон редактирования профиля пользователя
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,17 +14,15 @@ if ( astra_page_layout() == 'left-sidebar' ) {
 }
 ?>
 
-<div id="primary" <?php astra_primary_class(); ?>>
-		<?php
-		astra_primary_content_top();
+<?php
+astra_primary_content_top();
 
-		astra_content_loop();
+astra_content_loop();
 
-		astra_pagination();
+astra_pagination();
 
-		astra_primary_content_bottom();
+astra_primary_content_bottom();
 		?>
-	</div><!-- #primary -->
 
 <?php
 global $user_ID;
@@ -74,17 +72,17 @@ endif;
 // profile-update.php - это файл, который находится в папке с темой и обрабатывает сохранение, его содержимое будет в следующем шаге
 ?>
 <form action="<?php echo get_stylesheet_directory_uri() ?>/profile-update.php" method="POST">
-    <input type="text" name="first_name" placeholder="Имя" value="<?php echo $userdata->first_name ?>" />
-    <input type="text" name="last_name" placeholder="Фамилия" value="<?php echo $userdata->last_name ?>" />
-    <input type="text" name="job-title" placeholder="Должность" value="<?php echo get_user_meta($user_ID, 'job-title', true ) ?>" />
+    <input type="text" name="first_name" placeholder="Ім'я" value="<?php echo $userdata->first_name ?>" />
+    <input type="text" name="last_name" placeholder="Прізвище" value="<?php echo $userdata->last_name ?>" />
     <input type="email" name="email" placeholder="Email" value="<?php echo $userdata->user_email ?>" />
     <input type="text" name="phone" placeholder="Телефон" value="<?php echo get_user_meta($user_ID, 'phone', true)?>" />
 
-    <input type="password" name="pwd1" placeholder="Старый пароль" />
-    <input type="password" name="pwd2" placeholder="Новый пароль" />
-    <input type="password" name="pwd3" placeholder="Повторите новый пароль" />
+    <input type="password" name="pwd1" placeholder="Старий пароль" />
+    <input type="password" name="pwd2" placeholder="Новий пароль" />
+    <input type="password" name="pwd3" placeholder="Повторіть новий пароль" />
 
-    <button>Сохранить</button>
+    <button>Зберегти</button>
+    <input type="button" onclick="window.location.href = 'http://localhost/wordpress/index.php/account'" value="Назад">
 </form>
 </body>
 </html>
