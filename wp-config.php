@@ -87,6 +87,12 @@ define('WP_DEBUG_DISPLAY', true);
 
 define( 'ALLOW_UNFILTERED_UPLOADS', true );
 
+//test sending email
+define('WP_MAIL_SMTP_AUTH', false);
+define('WP_MAIL_SMTP_SECURE', '');
+define('WP_MAIL_SMTP_HOST', 'localhost');
+define('WP_MAIL_SMTP_PORT', 25);
+
 /* Add any custom values between this line and the "stop editing" line. */
 
 

@@ -45,27 +45,27 @@ if( !$user_ID ) {
 if( isset($_GET['status']) ) :
     switch( $_GET['status'] ) :
         case 'ok':{
-            echo '<div class="success">Сохранено.</div>';
+            echo '<div class="success">Збережено.</div>';
             break;
         }
         case 'exist':{
-            echo '<div class="error">Пользователь с указанным email уже существует.</div>';
+            echo '<div class="error">Користувач з вказаним email вже існує.</div>';
             break;
         }
         case 'short':{
-            echo '<div class="error">Пароль слишком короткий.</div>';
+            echo '<div class="error">Пароль занадто короткий.</div>';
             break;
         }
         case 'mismatch':{
-            echo '<div class="error">Пароли не совпадают.</div>';
+            echo '<div class="error">Паролі не співпадають.</div>';
             break;
         }
         case 'wrong':{
-            echo '<div class="error">Старый пароль неверен.</div>';
+            echo '<div class="error">Старий пароль не правильний.</div>';
             break;
         }
         case 'required':{
-            echo '<div class="error">Пожалуйста, заполните все обязательные поля.</div>';
+            echo '<div class="error">Будь-ласка, заповніть всі обов\'язкові поля.</div>';
             break;
         }
     endswitch;
