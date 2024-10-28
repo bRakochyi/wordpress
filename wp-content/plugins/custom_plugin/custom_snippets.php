@@ -48,9 +48,18 @@ add_action( 'register_form', 'true_show_fields' );
 
 function true_show_fields() {
 
-    $job_title = ! empty( $_POST[ 'job-title' ] ) ? $_POST[ 'job-title' ] : '';
+    $first_name = ! empty( $_POST[ 'first_name' ] ) ? $_POST[ 'first_name' ] : '';
+    $last_name = ! empty( $_POST[ 'last_name' ] ) ? $_POST[ 'last_name' ] : '';
     $phone = ! empty( $_POST[ 'phone' ] ) ? $_POST[ 'phone' ] : '';
     ?>
+    <p>
+        <label for="first_name">Ваше ім'я</label>
+        <input type="text" id="first_name" name="first_name" class="input" value="<?php echo esc_attr( $first_name ) ?>" size="25" />
+    </p>
+    <p>
+        <label for="last_name">Ваше прізвище</label>
+        <input type="text" id="last_name" name="last_name" class="input" value="<?php echo esc_attr( $last_name ) ?>" size="25" />
+    </p>
     <p>
         <label for="password">Пароль<br/>
             <input id="password" class="input" type="password" tabindex="30" size="25" value="" name="password"/>
@@ -64,7 +73,7 @@ function true_show_fields() {
     </p>
     <p>
         <label for="phone">Телефон</label>
-        <input type="text" id="phone" name="phone" class="input" placeholder="Телефон" value="<?php echo esc_attr( $phone ) ?>" size="25" />
+        <input type="text" id="phone" name="phone" class="input" value="<?php echo esc_attr( $phone ) ?>" size="25" />
     </p>
     <?php
 }
@@ -77,18 +86,20 @@ function true_check_fields( $errors, $sanitized_user_login, $user_email ) {
 
     if ( $_POST['password'] !== $_POST['repeat_password'] )
     {
-        $errors->add( 'passwords_not_matched', "<strong>ERROR</strong>: Passwords must match" );
+        $errors->add( 'passwords_not_matched', "<strong>Помилка:</strong>: Паролі мають збігатися" );
     }
     if ( strlen( $_POST['password'] ) < 4 )
     {
-        $errors->add( 'password', "<strong>ERROR</strong>: Passwords must be at least six characters long" );
+        $errors->add( 'password', "<strong>Помилка:</strong>: Довжина паролів має бути не менше чотирьох символів" );
     }
     /*
      * Функція перевірки полів, щоб вони були заповнені
      */
 
-    if( empty( $_POST[ 'phone' ] ) ) {
-        $errors->add( 'empty_phone', '<strong>Ошибка:</strong> Пожалуйста, укажите номер телефона.' );
+    if( empty( $_POST[ 'phone' ] ) &&  empty( $_POST[ 'first_name' ] ) && empty( $_POST[ 'last_name' ] )) {
+        $errors->add( 'empty_phone', '<strong>Помилка:</strong> Будь ласка, вкажіть номер телефону.' );
+        $errors->add( 'empty_first_name', '<strong>Помилка:</strong> Будь ласка, вкажіть ваше ім\'я.' );
+        $errors->add( 'empty_last_name', '<strong>Помилка:</strong> Будь ласка, вкажіть ваше прізвище.' );
     }
 
     return $errors;
@@ -109,6 +120,8 @@ function true_register_fields( $user_id ) {
     wp_update_user( $userdata );
     wp_set_auth_cookie( $user_id );
     update_user_meta( $user_id, 'phone', sanitize_text_field( $_POST[ 'phone' ] ) );
+    update_user_meta( $user_id, 'first_name', sanitize_text_field( $_POST[ 'first_name' ] ) );
+    update_user_meta( $user_id, 'last_name', sanitize_text_field( $_POST[ 'last_name' ] ) );
 
 }
 
@@ -168,4 +181,10 @@ function save_register_fields( $user_id ) {
 
 }
 
-// додавання полів в адмінку "изменить"
+// відключення відправки емейл після реєстрації
+if (!function_exists('wp_new_user_notification')) {
+    function wp_new_user_notification($user_id, $deprecated = null, $notify = '') {
+        return; // Відключає відправку листа
+    }
+}
+add_filter('send_password_change_email', '__return_false');

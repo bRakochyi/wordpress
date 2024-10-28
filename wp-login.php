@@ -1177,7 +1177,7 @@ switch ( $action ) {
 
 			?>
 			<p id="reg_passmail">
-				<?php _e( 'Registration confirmation will be emailed to you.' ); ?>
+				<?php echo ''; ?>
 			</p>
 			<input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>" />
 			<p class="submit">

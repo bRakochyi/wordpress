@@ -601,3 +601,15 @@ add_filter( 'comment_form_logged_in', 'remove_logged_in_message' );
 if ( !current_user_can('administrator') ) {
     add_filter('show_admin_bar', '__return_false');
 }
+
+
+// видалення тексту 'підтвердження буде набіслано на вашу ел пошту'
+add_filter('registration_errors', 'remove_registration_message', 20, 3);
+function remove_registration_message($translated_text, $text, $domain) {
+    if ($text === 'Подтверждение регистрации будет отправлено на ваш email.') {
+        $translated_text = ''; // Залиште порожнім, щоб видалити текст
+        // Або змінити на інший текст:
+        // $translated_text = 'новий текст тут';
+    }
+    return $translated_text;
+}
