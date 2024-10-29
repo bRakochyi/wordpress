@@ -76,6 +76,7 @@ endif;
 // profile-update.php - это файл, который находится в папке с темой и обрабатывает сохранение, его содержимое будет в следующем шаге
 ?>
 <form class="background-form" action="<?php echo get_stylesheet_directory_uri() ?>/profile-update.php" method="POST">
+    <p> Для редагування форм вводу, клацніть курсором мишки в будь-яке поле вводу і відредагуйте. </p>
     <input type="text" style="background-color: rgba(255, 255, 255, 0)" name="first_name" placeholder="Ім'я" value="<?php echo $userdata->first_name ?>" />
     <input type="text" style="background-color: rgba(255, 255, 255, 0)" name="last_name" placeholder="Прізвище" value="<?php echo $userdata->last_name ?>" />
     <input type="email" style="background-color: rgba(255, 255, 255, 0)" name="email" placeholder="Email" value="<?php echo $userdata->user_email ?>" />

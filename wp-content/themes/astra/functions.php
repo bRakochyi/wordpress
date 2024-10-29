@@ -520,18 +520,12 @@ function redirect_users_after_login() {
     $roles = ( array ) $user->roles;
 
 
-    // Редiрект для пiдписників
-    if ( $roles[0] == 'subscriber' ) {
+    // Редiрект для ролей
+    if ( $roles[0] == 'manager' || $roles[0] == 'paymaster' ||  $roles[0] == 'technical') {
         wp_redirect( home_url() );
         exit;
     }
 
-
-    // Редiрект для користувачів
-    if ( $roles[0] == 'user' ) {
-        wp_redirect( home_url() );
-        exit;
-    }
 
 }
 add_action( 'admin_init', 'redirect_users_after_login' );
@@ -553,7 +547,7 @@ add_action( 'template_redirect',
 function restrict_access_for_logged_in_users() {
     // Замените 'your-page-slug' на слаг вашей страницы
     if (is_user_logged_in() && (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false)) {
-        wp_redirect( home_url('index.php/account') );
+        wp_redirect( home_url('index.php') );
     }
 }
 add_action('init', 'restrict_access_for_logged_in_users');

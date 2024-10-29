@@ -60,10 +60,10 @@ if( !$user_ID ) {
 
     <table class="form-table">
 
-
+        <tr><th><h4> Тут виводиться інформація про ваш профіль</h4></tr>
         <tr><th><p for="first_name">Ваше ім'я</p></th>
             <td><p class="text-color"> <?php echo $userdata->first_name ?></p></td>
-
+        </tr>
         <tr><th><p for="last_name">Ваше прізвище</p></th>
             <td><p class="text-color"><?php echo $userdata->last_name ?></p></td>
         </tr>
