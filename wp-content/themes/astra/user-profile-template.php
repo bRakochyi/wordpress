@@ -54,6 +54,12 @@ if( !$user_ID ) {
                 border: none !important; /* Прячем рамку вокруг таблицы */
                 background-color: rgba(255, 255, 255, 0.1);
             }
+            .edit-button {
+                transition: transform 0.3s ease,   color 0.3s ease;
+            }
+            .edit-button:hover {
+                transform: scale(1.2);
+            }
         </style>
     </head>
     <body>
@@ -75,7 +81,7 @@ if( !$user_ID ) {
         </tr>
         <tr><th><p>Для зміни Ваших даних натисніть кнопку "Змінити"</p></th>
             <td>
-                <form action="http://localhost/wordpress/index.php/edit-account">
+                <form class="edit-button" action="http://localhost/wordpress/index.php/edit-account">
                     <button>Змінити</button>
 
                 </form>
