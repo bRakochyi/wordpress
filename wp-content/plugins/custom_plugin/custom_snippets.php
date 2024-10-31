@@ -188,3 +188,48 @@ if (!function_exists('wp_new_user_notification')) {
     }
 }
 add_filter('send_password_change_email', '__return_false');
+
+
+// вимкнення чеку "Запам'ятати мене" щоб встановити тривалість сесії для всіх на 10 годин.
+// після 10-ти годин сесія закривається і всіх розлогінює.
+function remove_remember_me_checkbox() {
+    echo '<style type="text/css">
+            #rememberme, label[for="rememberme"] {
+                display: none;
+            }
+          </style>';
+}
+add_action('login_head', 'remove_remember_me_checkbox');
+
+function custom_session_duration($expiration): float
+{
+    return DAY_IN_SECONDS * 0.42; // Тут встановлюється сесія приблизно на 10 год.
+}
+add_filter('auth_cookie_expiration', 'custom_session_duration');
+
+
+//цей код для того, щоб автоматично розлогінювати користувача після 1 години неактивності
+function auto_logout() {
+    $inactivity_limit = 3600; // Час в секундах = (60 хвилин) = 1 год.
+    if (is_user_logged_in()) {
+        echo '<script type="text/javascript">
+            let inactivityTime = function () {
+                let t;
+                window.onload = resetTimer;
+                document.onmousemove = resetTimer;
+                document.onkeypress = resetTimer;
+
+                function logout() {
+                    window.location.href = "' . wp_logout_url() . '";
+                }
+
+                function resetTimer() {
+                    clearTimeout(t);
+                    t = setTimeout(logout, ' . $inactivity_limit * 1000 . ');
+                }
+            };
+            inactivityTime();
+            </script>';
+    }
+}
+add_action('wp_footer', 'auto_logout');

@@ -313,8 +313,7 @@ $result = add_role('user', __('Користувач'),
         'upgrade_network' => false
     ));
 
-
-$result = add_role('manager', __('Менеджер'),
+$result = add_role('director', __('Директор'),
     array(
         'read' => false,
         'delete_posts' => false,
@@ -379,135 +378,8 @@ $result = add_role('manager', __('Менеджер'),
         'upgrade_network' => false
     ));
 
-$result = add_role('paymaster', __('Касир'),
-    array(
-        'read' => false,
-        'delete_posts' => false,
-        'edit_posts' => false,
-        'delete_published_posts' => false,
-        'edit_published_posts' => false,
-        'publish_posts' => false,
-        'upload_files' => false,
-        'delete_others_pages' => false,
-        'delete_others_posts' => false,
-        'delete_pages' => false,
-        'delete_private_pages' => false,
-        'delete_private_posts' => false,
-        'delete_published_pages' => false,
-        'edit_others_pages' => false,
-        'edit_others_posts' => false,
-        'edit_pages' => false,
-        'edit_private_pages' => false,
-        'edit_private_posts' => false,
-        'edit_published_pages' => false,
-        'manage_categories' => false,
-        'manage_links' => false,
-        'moderate_comments' => false,
-        'publish_pages' => false,
-        'read_private_pages' => false,
-        'read_private_posts' => false,
-        'unfiltered_html' => false,
-        'activate_plugins' => false,
-        'create_users' => false,
-        'deactivate_plugins' => false,
-        'delete_plugins' => false,
-        'delete_themes' => false,
-        'delete_users' => false,
-        'edit_dashboard' => false,
-        'edit_files' => false,
-        'edit_plugins' => false,
-        'edit_theme_options' => false,
-        'edit_themes' => false,
-        'edit_users' => false,
-        'export' => false,
-        'import' => false,
-        'install_languages' => false,
-        'install_plugins' => false,
-        'install_themes' => false,
-        'list_users' => false,
-        'manage_options' => false,
-        'promote_users' => false,
-        'remove_users' => false,
-        'switch_themes' => false,
-        'update_core' => false,
-        'update_languages' => false,
-        'update_plugins' => false,
-        'update_themes' => false,
-        'unfiltered_upload' => false,
-        'manage_network_options' => false,
-        'manage_network_plugins' => false,
-        'manage_network_themes' => false,
-        'manage_network_users' => false,
-        'manage_network' => false,
-        'manage_sites' => false,
-        'setup_network' => false,
-        'upgrade_network' => false
-    ));
-
-$result = add_role('technical', __('Технік'),
-    array(
-        'read' => false,
-        'delete_posts' => false,
-        'edit_posts' => false,
-        'delete_published_posts' => false,
-        'edit_published_posts' => false,
-        'publish_posts' => false,
-        'upload_files' => false,
-        'delete_others_pages' => false,
-        'delete_others_posts' => false,
-        'delete_pages' => false,
-        'delete_private_pages' => false,
-        'delete_private_posts' => false,
-        'delete_published_pages' => false,
-        'edit_others_pages' => false,
-        'edit_others_posts' => false,
-        'edit_pages' => false,
-        'edit_private_pages' => false,
-        'edit_private_posts' => false,
-        'edit_published_pages' => false,
-        'manage_categories' => false,
-        'manage_links' => false,
-        'moderate_comments' => false,
-        'publish_pages' => false,
-        'read_private_pages' => false,
-        'read_private_posts' => false,
-        'unfiltered_html' => false,
-        'activate_plugins' => false,
-        'create_users' => false,
-        'deactivate_plugins' => false,
-        'delete_plugins' => false,
-        'delete_themes' => false,
-        'delete_users' => false,
-        'edit_dashboard' => false,
-        'edit_files' => false,
-        'edit_plugins' => false,
-        'edit_theme_options' => false,
-        'edit_themes' => false,
-        'edit_users' => false,
-        'export' => false,
-        'import' => false,
-        'install_languages' => false,
-        'install_plugins' => false,
-        'install_themes' => false,
-        'list_users' => false,
-        'manage_options' => false,
-        'promote_users' => false,
-        'remove_users' => false,
-        'switch_themes' => false,
-        'update_core' => false,
-        'update_languages' => false,
-        'update_plugins' => false,
-        'update_themes' => false,
-        'unfiltered_upload' => false,
-        'manage_network_options' => false,
-        'manage_network_plugins' => false,
-        'manage_network_themes' => false,
-        'manage_network_users' => false,
-        'manage_network' => false,
-        'manage_sites' => false,
-        'setup_network' => false,
-        'upgrade_network' => false
-    ));
+// встановлення ролей з файлу (операція виконується тільки один раз)
+require_once "roles_lep.php";
 
 /**
  *
@@ -520,18 +392,12 @@ function redirect_users_after_login() {
     $roles = ( array ) $user->roles;
 
 
-    // Редiрект для пiдписників
-    if ( $roles[0] == 'subscriber' ) {
+    // Редiрект для ролей на гол стор сайту крім адміна (в нього редірект як на гол стор так і в адмінку, в залежності від ситуації)
+    if ( $roles[0] !== 'administrator' ) {
         wp_redirect( home_url() );
         exit;
     }
 
-
-    // Редiрект для користувачів
-    if ( $roles[0] == 'user' ) {
-        wp_redirect( home_url() );
-        exit;
-    }
 
 }
 add_action( 'admin_init', 'redirect_users_after_login' );
@@ -553,7 +419,7 @@ add_action( 'template_redirect',
 function restrict_access_for_logged_in_users() {
     // Замените 'your-page-slug' на слаг вашей страницы
     if (is_user_logged_in() && (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false)) {
-        wp_redirect( home_url('index.php/account') );
+        wp_redirect( home_url('index.php') );
     }
 }
 add_action('init', 'restrict_access_for_logged_in_users');
@@ -562,33 +428,89 @@ add_action('init', 'restrict_access_for_logged_in_users');
 // додавання вибору ролей на сторынку реэстрации
 // Добавляем поле выбора роли на страницу регистрации
 function add_role_to_registration_form() {
-    ?>
-    <p>
-        <label for="role">Виберіть посаду<br />
-            <select name="role" id="role">
-                <option value="manager">Менеджер</option>
-                <option value="paymaster">Касир</option>
-                <option value="technical">Технік</option>
-            </select>
-        </label>
-    </p><br>
-    <?php
+    require "roles_register_form_select.php";
 }
 add_action( 'register_form', 'add_role_to_registration_form' );
 
 // Сохраняем выбранную роль при регистрации
 function save_user_role( $user_id ) {
-    if ( isset( $_POST['role'] ) ) {
-        $selected_role = $_POST['role'];
-        $allowed_roles = ['manager', 'paymaster', 'technical']; // Ограничение на выбор ролей
+    if (isset($_POST['organization']) && isset($_POST['department']) && isset($_POST['role'])) {
+        $organization = sanitize_text_field($_POST['organization']);
+        $department = sanitize_text_field($_POST['department']);
+        $selected_role = sanitize_text_field($_POST['role']);
 
-        if ( in_array( $selected_role, $allowed_roles ) ) {
-            $user = new WP_User( $user_id );
-            $user->set_role( $selected_role );
+        // Призначаємо ролі відповідно до вибору
+
+
+        if ($organization === 'tov_lep') {
+            if ($department === 'Відділення дистриб\'юції') {
+                $role = 'distribution_manager';
+            } elseif ($department === 'Відділення постачання') {
+                $role = 'postachannya_manager';
+            } elseif ($department === 'Офісний відділ') {
+                $role = 'office_worker';
+            } elseif ($department === 'Дирекція') {
+                $role = 'director';
+            } elseif ($department === 'Бухгалтерія') {
+                if ($selected_role === 'Бухгалтер') {
+                    $role = 'bukhhalter';
+                } elseif ($selected_role === 'Касир ЛЕП') {
+                    $role = 'paymaster_lep';
+                }
+            } elseif ($department === 'Технічний відділ') {
+                $role = 'technik';
+            } elseif ($department === 'Транспортний відділ') {
+                if ($selected_role === 'Механік') {
+                    $role = 'mekhanik';
+                } elseif ($selected_role === 'Водій') {
+                    $role = 'vodij';
+                }
+            } elseif ($department === 'Охорона') {
+                $role = 'security';
+            } elseif ($department === 'Складський відділ') {
+                $role = 'sklad_worker';
+            }
+        } elseif ($organization === 'eloter') {
+            if ($department === 'Елотер') {
+                $role = 'eloter_worker';
+            }
+        } elseif ($organization === 'amperok') {
+            if ($department === 'Амперок магазин') {
+                if ($selected_role === 'Адміністратор амперок магазин') {
+                    $role = 'admin_amperok_store';
+                } elseif ($selected_role === 'Менеджер амперок магазин') {
+                    $role = 'manager_amperok_store';
+                } elseif ($selected_role === 'Касир амперок магазин') {
+                    $role = 'paymaster_amperok_store';
+                } elseif ($selected_role === 'Працівник амперок магазин') {
+                    $role = 'amperok_worker_store';
+                }
+
+            } elseif ($department === 'Амперок інтернет') {
+                if ($selected_role === 'Адміністратор амперок інтернет') {
+                    $role = 'admin_amperok_internet';
+                } elseif ($selected_role === 'Менеджер амперок інтернет') {
+                    $role = 'manager_amperok_internet';
+                } elseif ($selected_role === 'Контент менеджер амперок інтернет') {
+                    $role = 'content_manager_amperok_internet';
+                }
+
+            }
         }
     }
+
+
+    if (array_key_exists($role, wp_roles()->roles)) {
+        $user = new WP_User($user_id);
+        $user->set_role($role);
+
+    } else {
+        $user = new WP_User($user_id);
+        $user->set_role('distribution_manager');
+    }
+
 }
-add_action( 'user_register', 'save_user_role' );
+add_action( 'user_register', 'save_user_role');
 
 // видалення запису перед таблицею коментаря
 function remove_logged_in_message() {

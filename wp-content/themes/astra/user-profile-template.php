@@ -54,16 +54,22 @@ if( !$user_ID ) {
                 border: none !important; /* Прячем рамку вокруг таблицы */
                 background-color: rgba(255, 255, 255, 0.1);
             }
+            .edit-button {
+                transition: transform 0.3s ease,   color 0.3s ease;
+            }
+            .edit-button:hover {
+                transform: scale(1.2);
+            }
         </style>
     </head>
     <body>
 
     <table class="form-table">
 
-
+        <tr><th><h4> Тут виводиться інформація про ваш профіль</h4></tr>
         <tr><th><p for="first_name">Ваше ім'я</p></th>
             <td><p class="text-color"> <?php echo $userdata->first_name ?></p></td>
-
+        </tr>
         <tr><th><p for="last_name">Ваше прізвище</p></th>
             <td><p class="text-color"><?php echo $userdata->last_name ?></p></td>
         </tr>
@@ -75,7 +81,7 @@ if( !$user_ID ) {
         </tr>
         <tr><th><p>Для зміни Ваших даних натисніть кнопку "Змінити"</p></th>
             <td>
-                <form action="http://localhost/wordpress/index.php/edit-account">
+                <form class="edit-button" action="http://localhost/wordpress/index.php/edit-account">
                     <button>Змінити</button>
 
                 </form>
