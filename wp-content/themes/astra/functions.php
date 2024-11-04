@@ -393,7 +393,7 @@ function redirect_users_after_login() {
 
 
     // Редiрект для ролей на гол стор сайту крім адміна (в нього редірект як на гол стор так і в адмінку, в залежності від ситуації)
-    if ( $roles[0] !== 'administrator' ) {
+    if ( $roles[0] !== 'administrator' && $roles[0] !== 'editor' && $roles[0] !== 'author') {
         wp_redirect( home_url() );
         exit;
     }
@@ -494,7 +494,6 @@ function save_user_role( $user_id ) {
                 } elseif ($selected_role === 'Контент менеджер амперок інтернет') {
                     $role = 'content_manager_amperok_internet';
                 }
-
             }
         }
     }
@@ -519,19 +518,18 @@ function remove_logged_in_message() {
 add_filter( 'comment_form_logged_in', 'remove_logged_in_message' );
 
 
-//приховування панелы адмыныстратора у вверху сайту у всіх крім адміна
-if ( !current_user_can('administrator') ) {
+//приховування панелы адмыныстратора у вверху сайту у всіх крім адміна, редактора, автора
+if ( !current_user_can('administrator') && !current_user_can('editor') && !current_user_can('author') ) {
     add_filter('show_admin_bar', '__return_false');
 }
 
 
-// видалення тексту 'підтвердження буде набіслано на вашу ел пошту'
+// видалення тексту 'підтвердження буде надіслано на вашу ел пошту
 add_filter('registration_errors', 'remove_registration_message', 20, 3);
 function remove_registration_message($translated_text, $text, $domain) {
     if ($text === 'Подтверждение регистрации будет отправлено на ваш email.') {
         $translated_text = ''; // Залиште порожнім, щоб видалити текст
         // Або змінити на інший текст:
-        // $translated_text = 'новий текст тут';
     }
     return $translated_text;
 }

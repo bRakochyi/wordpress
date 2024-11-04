@@ -55,10 +55,17 @@ if( !$user_ID ) {
                 background-color: rgba(255, 255, 255, 0.1);
             }
             .edit-button {
+                color: #046bd2;
                 transition: transform 0.3s ease,   color 0.3s ease;
             }
             .edit-button:hover {
                 transform: scale(1.2);
+            }
+            .text-color {
+                color: #046bd2;
+            }
+            .text-color-h4 {
+                color: #0452a0;
             }
         </style>
     </head>
@@ -66,20 +73,20 @@ if( !$user_ID ) {
 
     <table class="form-table">
 
-        <tr><th><h4> Тут виводиться інформація про ваш профіль</h4></tr>
-        <tr><th><p for="first_name">Ваше ім'я</p></th>
+        <tr><th><h4 class="text-color-h4"> Тут виводиться інформація про ваш профіль</h4></tr>
+        <tr><th><p class="text-color" for="first_name">Ваше ім'я</p></th>
             <td><p class="text-color"> <?php echo $userdata->first_name ?></p></td>
         </tr>
-        <tr><th><p for="last_name">Ваше прізвище</p></th>
+        <tr><th><p class="text-color" for="last_name">Ваше прізвище</p></th>
             <td><p class="text-color"><?php echo $userdata->last_name ?></p></td>
         </tr>
-        <tr><th><p for="email">Ваша електронна пошта</p></th>
+        <tr><th><p class="text-color" for="email">Ваша електронна пошта</p></th>
             <td><p class="text-color"><?php echo $userdata->user_email ?></p></td>
         </tr>
-        <tr><th><p for="phone">Ваш номер телефону</p></th>
+        <tr><th><p class="text-color" for="phone">Ваш номер телефону</p></th>
             <td><p class="text-color"><?php echo get_user_meta($user_ID, 'phone', true) ?></p></td>
         </tr>
-        <tr><th><p>Для зміни Ваших даних натисніть кнопку "Змінити"</p></th>
+        <tr><th><p class="text-color">Для зміни Ваших даних натисніть кнопку "Змінити"</p></th>
             <td>
                 <form class="edit-button" action="http://localhost/wordpress/index.php/edit-account">
                     <button>Змінити</button>
