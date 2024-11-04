@@ -80,10 +80,10 @@ $table_prefix = 'wpgg_';
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
 /** On error */
-error_reporting(E_ALL); // включаем вывод ошибок
-ini_set('display_errors', 1); // включаем вывод ошибок на экран
-define('WP_DEBUG', true);
-define('WP_DEBUG_DISPLAY', true);
+error_reporting(0); // включаем вывод ошибок
+ini_set('display_errors', 0); // включаем вывод ошибок на экран
+define('WP_DEBUG', false);
+define('WP_DEBUG_DISPLAY', false);
 
 define( 'ALLOW_UNFILTERED_UPLOADS', true );
 

@@ -132,5 +132,41 @@ $amperok = ['admin_amperok_store', 'manager_amperok_store',
         setInterval(drawClock, 1000);
         drawClock();
     </script>
+    <br>
+    <br>
+    <div id="chat-container">
+        <input type="text" id="user-input" placeholder="Введіть ваше запитання...">
+        <button id="send-button">Надіслати</button>
+        <div id="chat-log"></div>
+    </div>
+
+    <script>
+        document.getElementById('send-button').onclick = function() {
+            var userInput = document.getElementById('user-input').value;
+            document.getElementById('chat-log').innerHTML += '<div><strong>Ви:</strong> ' + userInput + '</div>';
+
+            fetch('https://api-inference.huggingface.co/models/google/byt5-large', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer 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',  // Замість YOUR_API_TOKEN вставте ваш токен Hugging Face
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    inputs: userInput
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var botResponse = data[0].generated_text;  // Відповідь, отримана від моделі
+                    document.getElementById('chat-log').innerHTML += '<div><strong>ChatGPT:</strong> ' + botResponse + '</div>';
+                    document.getElementById('user-input').value = ''; // Очистити поле вводу після відправки
+                })
+                .catch(error => {
+                    console.error("Помилка:", error);
+                    document.getElementById('chat-log').innerHTML += '<div><strong>Помилка:</strong> Не вдалося отримати відповідь. Спробуйте пізніше.</div>';
+                });
+        }
+    </script>
+
     </body>
 </html>

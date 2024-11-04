@@ -10,7 +10,7 @@
         <option value="eloter">ЕЛОТЕР</option>
         <option value="amperok">АМПЕРОК</option>
     </select>
-
+    <br>
     <label for="select2" style="display: none;">Виберіть відділ:</label>
     <select id="select2" name="department" style="display: none;">
         <option value="">Оберіть...</option>
@@ -20,6 +20,7 @@
     <select id="select3" name="role" style="display: none;">
         <option value="">Оберіть...</option>
     </select>
+    <br>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const select1 = document.getElementById("select1");

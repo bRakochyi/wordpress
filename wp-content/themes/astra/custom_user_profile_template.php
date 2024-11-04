@@ -54,6 +54,9 @@ if( !$user_ID ) {
         .edit-page-form:hover {
             transform: scale(1.03);
         }
+        .text-color-h5 {
+            color: #0452a0;
+        }
     </style>
 </head>
 <body>
@@ -88,17 +91,25 @@ endif;
 // profile-update.php - это файл, который находится в папке с темой и обрабатывает сохранение, его содержимое будет в следующем шаге
 ?>
 <form class="background-form" action="<?php echo get_stylesheet_directory_uri() ?>/profile-update.php" method="POST">
-    <p> Для редагування форм вводу, клацніть курсором мишки в будь-яке поле вводу і відредагуйте. </p>
-    <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0)" name="first_name" placeholder="Ім'я" value="<?php echo $userdata->first_name ?>" />
-    <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0)" name="last_name" placeholder="Прізвище" value="<?php echo $userdata->last_name ?>" />
-    <input type="email" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0)" name="email" placeholder="Email" value="<?php echo $userdata->user_email ?>" />
-    <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0)" name="phone" placeholder="Телефон" value="<?php echo get_user_meta($user_ID, 'phone', true)?>" />
+    <h5 class="text-color-h5"> Для редагування форм вводу, клацніть курсором мишки в будь-яке поле вводу і
+        відредагуйте. </h5>
+    <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
+           name="first_name" placeholder="Ім'я" value="<?php echo $userdata->first_name ?>"/>
+    <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
+           name="last_name" placeholder="Прізвище" value="<?php echo $userdata->last_name ?>"/>
+    <input type="email" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
+           name="email" placeholder="Email" value="<?php echo $userdata->user_email ?>"/>
+    <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
+           name="phone" placeholder="Телефон" value="<?php echo get_user_meta($user_ID, 'phone', true) ?>"/>
 
-    <input type="password" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0)" name="pwd2" placeholder="Новий пароль" />
-    <input type="password" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0)" name="pwd3" placeholder="Повторіть новий пароль" />
+    <input type="password" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
+           name="pwd2" placeholder="Новий пароль"/>
+    <input type="password" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
+           name="pwd3" placeholder="Повторіть новий пароль"/>
 
     <button class="edit-page-buttons" style="margin-right: 15px;">Зберегти</button>
-    <input class="edit-page-buttons"  type="button" onclick="window.location.href = 'http://localhost/wordpress/index.php/account'" value="Назад">
+    <input class="edit-page-buttons" type="button"
+           onclick="window.location.href = 'http://localhost/wordpress/index.php/account'" value="Назад">
 </form>
 </body>
 </html>
