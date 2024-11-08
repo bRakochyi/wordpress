@@ -533,3 +533,12 @@ function remove_registration_message($translated_text, $text, $domain) {
     }
     return $translated_text;
 }
+
+// додавання іконки сейвс в хедер
+function favorites_count() {
+    if (function_exists('get_user_favorites_count')) {
+        return get_user_favorites_count();
+    }
+    return 0;
+}
+add_shortcode('favorites_count', 'favorites_count');
