@@ -59,7 +59,7 @@ function astra_scroll_to_top_static_css( $dynamic_css ) {
 		}
 		.ast-scroll-to-top-right {
 			' . esc_attr( $ltr_right ) . ': 30px;
-			bottom: 30px;
+			top: 90px;
 		}
 		.ast-scroll-to-top-left {
 			' . esc_attr( $ltr_left ) . ': 30px;

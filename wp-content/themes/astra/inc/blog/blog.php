@@ -341,7 +341,7 @@ function astra_get_blog_post_title() {
 	/* translators: 1: Current post link, 2: Current post id */
 	astra_the_post_title(
 		sprintf(
-			'<h2 class="entry-title ast-blog-single-element" %2$s><a href="%1$s" rel="bookmark">',
+			'<h2 class="entry-title ast-blog-single-element" %2$s><a href="%1$s" style="color: #046BD2" rel="bookmark">',
 			esc_url( get_permalink() ),
 			astra_attr(
 				'article-title-blog',

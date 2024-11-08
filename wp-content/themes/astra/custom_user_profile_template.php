@@ -91,22 +91,27 @@ endif;
 // profile-update.php - это файл, который находится в папке с темой и обрабатывает сохранение, его содержимое будет в следующем шаге
 ?>
 <form class="background-form" action="<?php echo get_stylesheet_directory_uri() ?>/profile-update.php" method="POST">
-    <h5 class="text-color-h5"> Для редагування форм вводу, клацніть курсором мишки в будь-яке поле вводу і
-        відредагуйте. </h5>
+    <h5 class="text-color-h5"> Для редагування, клацніть курсором мишки в будь-яке поле вводу і
+        відредагуйте. </h5><br>
     <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
            name="first_name" placeholder="Ім'я" value="<?php echo $userdata->first_name ?>"/>
+    <p> </p>
     <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
            name="last_name" placeholder="Прізвище" value="<?php echo $userdata->last_name ?>"/>
+    <p> </p>
     <input type="email" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
            name="email" placeholder="Email" value="<?php echo $userdata->user_email ?>"/>
+    <p> </p>
     <input type="text" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
            name="phone" placeholder="Телефон" value="<?php echo get_user_meta($user_ID, 'phone', true) ?>"/>
-
+    <p> </p>
     <input type="password" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
            name="pwd2" placeholder="Новий пароль"/>
+    <p> </p>
     <input type="password" class="edit-page-form" style="background-color: rgba(255, 255, 255, 0); color: #046bd2; "
            name="pwd3" placeholder="Повторіть новий пароль"/>
 
+    <p> </p>
     <button class="edit-page-buttons" style="margin-right: 15px;">Зберегти</button>
     <input class="edit-page-buttons" type="button"
            onclick="window.location.href = 'http://localhost/wordpress/index.php/account'" value="Назад">
