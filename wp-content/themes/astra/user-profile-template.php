@@ -59,7 +59,7 @@ if( !$user_ID ) {
                 transition: transform 0.3s ease,   color 0.3s ease;
             }
             .edit-button:hover {
-                transform: scale(1.2);
+                transform: scale(1.1);
             }
             .text-color {
                 color: #046bd2;
@@ -90,6 +90,14 @@ if( !$user_ID ) {
             <td>
                 <form class="edit-button" action="http://localhost/wordpress/index.php/edit-account">
                     <button>Змінити</button>
+
+                </form>
+            </td>
+        </tr>
+        <tr><th><p class="text-color">Щоб переглянути збережені (улюблені) інструкції натисніть "Перейти"</p></th>
+            <td>
+                <form class="edit-button" action="http://localhost/wordpress/index.php/my-favorites">
+                    <button>Перейти</button>
 
                 </form>
             </td>
