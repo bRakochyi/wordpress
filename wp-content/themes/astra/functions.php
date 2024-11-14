@@ -542,3 +542,10 @@ function favorites_count() {
     return 0;
 }
 add_shortcode('favorites_count', 'favorites_count');
+
+
+// Додавання нових розмірів зображень
+function custom_image_sizes() {
+    add_image_size('custom-size', 50, 50, true); // 600px ширина, 400px висота, обрізається по центру
+}
+add_action('after_setup_theme', 'custom_image_sizes');

@@ -436,7 +436,7 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 								}
 
 								?>
-								<span class="ast-header-account-text"><?php echo 'Привіт ' . esc_html( $current_user->first_name ); ?></span>
+								<span class="ast-header-account-text"><?php echo 'Кабінет користувача '?></span>
 							<?php } ?>
 						</a>
 						<?php
