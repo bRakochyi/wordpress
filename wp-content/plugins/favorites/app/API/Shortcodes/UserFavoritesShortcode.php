@@ -69,13 +69,13 @@ class UserFavoritesShortcode
 		$favorites = new UserFavorites(
 			$this->options['user_id'], 
 			$this->options['site_id'], 
-			$this->options['include_links'],
-            $this->filters
+			$this->options['include_links'], 
+			$this->filters
 		);
 		return $favorites->getFavoritesList(
-			$this->options['include_buttons'],
-            $this->options['include_thumbnails'],
-			esc_attr($this->options['thumbnail_size']),
+			$this->options['include_buttons'], 
+			$this->options['include_thumbnails'], 
+			esc_attr($this->options['thumbnail_size']), 
 			$this->options['include_excerpts'],
 			esc_attr($this->options['no_favorites'])
 		);
