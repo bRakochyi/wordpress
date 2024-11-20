@@ -42,10 +42,16 @@ if( !$user_ID ) {
             padding: 20px; /* щоб забезпечити внутрішні відступи */
             border-radius: 10px; /* заокруглені кути, опціонально */
         }
-        .edit-page-buttons {
+        .edit-page-button-back {
             transition: transform 0.3s ease,   color 0.3s ease;
         }
-        .edit-page-buttons:hover {
+        .edit-page-button-back:hover {
+            transform: scale(1.2);
+        }
+        .edit-page-button-save {
+            transition: transform 0.3s ease,   color 0.3s ease;
+        }
+        .edit-page-button-save:hover {
             transform: scale(1.2);
         }
         .edit-page-form {
@@ -112,9 +118,10 @@ endif;
            name="pwd3" placeholder="Повторіть новий пароль"/>
 
     <p> </p>
-    <button class="edit-page-buttons" style="margin-right: 15px;">Зберегти</button>
-    <input class="edit-page-buttons" type="button"
+    <input class="edit-page-button-back" type="button"
            onclick="window.location.href = 'http://localhost/wordpress/index.php/account'" value="Назад">
+    <button class="edit-page-button-save" style="margin-left: 15px;">Зберегти</button>
+
 </form>
 </body>
 </html>

@@ -233,3 +233,56 @@ function auto_logout() {
     }
 }
 add_action('wp_footer', 'auto_logout');
+
+// додавання можливостей ролям
+function add_custom_caps_to_roles() {
+    //  всі кастомні ролі
+    $roles = array(
+        'distribution_manager',
+        'postachannya_manager',
+        'office_worker',
+        'bukhhalter',
+        'paymaster_lep',
+        'technik',
+        'mekhanik',
+        'vodij',
+        'security',
+        'sklad_worker',
+        'eloter_worker',
+        'admin_amperok_store',
+        'manager_amperok_store',
+        'paymaster_amperok_store',
+        'amperok_worker_store',
+        'admin_amperok_internet',
+        'manager_amperok_internet',
+        'content_manager_amperok_internet',
+        'director',
+        'user'
+    );
+
+    // Можливості, які потрібно додати
+    $caps = array(
+        'edit_published_posts',
+        'delete_posts',
+        'delete_published_posts',
+        'level_0',
+        'level_1',
+        'level_2'
+        // Додавання інших можливостей, які потрібно додати
+    );
+
+    // Прохід через кожну роль і додавання можливості
+    foreach ($roles as $role_name) {
+        $role = get_role($role_name);
+
+        if ($role) {
+            foreach ($caps as $cap) {
+                // Додавання можливість до ролі
+                $role->add_cap($cap);
+            }
+        }
+    }
+}
+
+// Виклик функції для додавання можливостей
+add_custom_caps_to_roles();
