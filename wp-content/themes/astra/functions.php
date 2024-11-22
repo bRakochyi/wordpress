@@ -551,17 +551,6 @@ function custom_image_sizes() {
 add_action('after_setup_theme', 'custom_image_sizes');
 
 
-// Локалізуємо ajaxurl
-//function enqueue_favorites_js() {
-//    // Підключаємо ваш JavaScript
-//    wp_enqueue_script('favorites-js',  '/wp-content/plugins/favorites/assets/js/favorites.js', array('jquery'), null, true);
-//
-//    // Локалізуємо ajaxurl, щоб він був доступний у вашому JS
-//    wp_localize_script('favorites-js', 'Ajax_fav', array(
-//        'admin_url' => esc_url( admin_url('admin-ajax.php') ) // Підключаємо повний URL до admin-ajax.php
-//    )); // передаємо ajaxurl в JS
-//}
-//add_action('wp_enqueue_scripts', 'enqueue_favorites_js');
 
 // Переключення версії JQuery
 function load_custom_jquery() {
@@ -574,179 +563,195 @@ function load_custom_jquery() {
 }
 add_action('wp_enqueue_scripts', 'load_custom_jquery');
 
-//додавання можливості видалити окремий запис зі сторінки "Мої улюблені"
 
-function custom_user_favorites() {
+
+
+/**
+ *
+ * Створення механізму додавання в улюблені пости і таж їх видалення
+ *
+ */
+function display_favorite_button($content) {
+    global $post;
     $user_id = get_current_user_id();
-    $favorites = get_user_meta($user_id, 'simplefavorites', true);
 
-    if ($favorites && !is_array($favorites)) {
-        $favorites = unserialize($favorites);
+    // Перевіряємо, чи користувач авторизований і чи є поточна сторінка постом
+    if (is_single() && $user_id > 0) {
+        $favorites = get_user_meta($user_id, 'customfavorites', true) ?: [];
+
+        // Перевіряємо, чи є поточний пост в улюблених
+        $is_favorite = in_array($post->ID, $favorites);
+
+        // Кнопка для додавання або видалення
+        $button_text = $is_favorite ? 'Додано' : 'Додати до улюблених';
+        $button_class = $is_favorite ? 'favorite-added' : 'add-to-favorites';
+
+
+        // Вставляємо HTML кнопки перед контентом
+        // Оновлений HTML для кнопки
+        $favorite_button = '<button class="favorite-button ' . $button_class . '" data-post-id="' . esc_attr($post->ID) . '">' . esc_html($button_text) . '</button>';
+
+        wp_enqueue_style('add-favorites-added', get_template_directory_uri() . '/assets/css/add-favorites-added.css');
+
+        // Додаємо кнопку перед контентом
+        $content = $favorite_button . $content;
     }
 
-    $posts_per_page = 2;
-    $paged = get_query_var('paged') ? get_query_var('paged') : 1;
-
-    // Отримуємо улюблені пости з пагінацією
-    $favorite_posts = array_slice($favorites, ($paged - 1) * $posts_per_page, $posts_per_page);
-
-// Перевіряємо, чи є улюблені пости
-    if (!empty($favorites[0]['posts'])) {
-        echo '<p class="posts-title-text">Мої улюблені пости</p>';
-        echo '<div class="favorite-posts">';
-
-        // Проходимо через кожен улюблений пост
-        foreach ($favorites[0]['posts'] as $post_id) {
-            $post = get_post($post_id);
-
-            if ($post) {
-                echo '<div class="favorite-post" id="favorite-post-' . esc_attr($post_id) . '">';
-                echo '<a href="' . esc_url(get_permalink($post)) . '">';
-                echo get_the_post_thumbnail($post, 'thumbnail'); // Зображення
-                echo '<p>' . esc_html(get_the_title($post)) . '</p>';
-                echo '</a>';
-                echo '<span class="remove-favorite" data-post-id="' . esc_attr($post_id) . '">&times;</span>';
-                echo '</div>';
-            }
-        }
-
-        ?>
-
-        <head>
-            <style type="text/css">
-                .favorite-posts {
-                    display: flex;
-                    grid-template-columns: repeat(3, 1fr);
-                    gap: 10px; /* Відстань між постами */
-                    order: 0;
-                }
-
-                .favorite-post {
-                    position: relative;
-                    width: 200px; /* Ширина кожного блоку з постом */
-                    padding: 10px;
-                    border: 1px solid #ddd;
-                    box-sizing: border-box;
-                    transition: transform 0.3s ease,   color 0.3s ease;
-                    text-align: center;
-                }
-
-                .favorite-post:hover {
-                    transform: scale(1.05);
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                }
-
-                .favorite-post img {
-                    max-width: 100%; /* Масштабує зображення до ширини контейнера */
-                    height: auto;
-                }
-
-                .remove-favorite {
-                    display: none;
-                    position: absolute;
-                    top: 1px;
-                    right: 1px;
-                    font-size: 29px;
-                    color: #ff4d4d;
-                    cursor: pointer;
-                    font-weight: bold;
-                    transition: transform 0.3s ease,   color 0.3s ease;
-                }
-                .remove-favorite:hover {
-                    transform: scale(1.2);
-                }
-
-                .favorite-post:hover .remove-favorite {
-                    display: inline;
-                }
-
-                .posts-title-text {
-                    font-size: 19px;
-                    color: #046BD2;
-                }
-            </style>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const favoritePostsContainer = document.querySelector('.favorite-posts');
-
-                    if (favoritePostsContainer) {
-                        favoritePostsContainer.addEventListener('click', function (event) {
-                            if (event.target.classList.contains('remove-favorite')) {
-                                event.stopPropagation();
-                                const postId = event.target.getAttribute('data-post-id');
-
-                                if (event.target.classList.contains('processing')) {
-                                    return;
-                                }
-
-                                event.target.classList.add('processing');
-
-                                const xhr = new XMLHttpRequest();
-                                xhr.open('POST', 'http://localhost/wordpress/wp-admin/admin-ajax.php', true);
-                                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-                                // Очікуємо відповідь у форматі JSON
-                                xhr.responseType = 'json';  // Це встановлює формат відповіді як JSON
-
-                                xhr.onreadystatechange = function () {
-                                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                                        event.target.classList.remove('processing');
-
-                                        if (xhr.status === 200) {
-                                            try {
-                                                // Якщо відповідь у форматі JSON, вона автоматично розпарситься
-                                                const data = xhr.response;
-
-                                                if (data.status === 'success') {
-                                                    event.target.closest('.favorite-post').remove();
-
-                                                    const favoriteCountElement = document.querySelector('#favorite-count');
-                                                    if (favoriteCountElement) {
-                                                        let currentCount = parseInt(favoriteCountElement.textContent, 10);
-                                                        favoriteCountElement.textContent = currentCount - 1;
-                                                    }
-                                                } else {
-                                                    alert(data.message || 'Не вдалося видалити пост.');
-                                                }
-                                            } catch (e) {
-                                                console.error('Помилка парсингу JSON:', e);
-                                                alert('Сталася помилка під час обробки відповіді сервера.');
-                                            }
-                                        } else {
-                                            console.error('Помилка сервера:', xhr.status);
-                                            alert('Сталася помилка під час видалення поста.');
-                                        }
-                                    }
-                                };
-
-                                // Формування тіла запиту
-                                const params = `action=remove_favorite&post_id=${encodeURIComponent(postId)}`;
-                                xhr.send(params);
-                            }
-                        });
-                    }
-                });
-
-            </script>
-        </head>
-
-        <?php
-
-
-        echo '</div>';
-    } else {
-        echo 'У вас немає улюблених постів.';
-    }
-
+    return $content;
 }
-add_shortcode('custom_user_favorites', 'custom_user_favorites');
+add_filter('the_content', 'display_favorite_button');
 
-//Створення AJAX-функції для видалення постів із улюблених
-function remove_favorite_post() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['post_id']) || $_POST['action'] !== 'remove_favorite') {
+// Функція для обробки AJAX запиту
+// Оновлений хендлер для обробки додавання/видалення з улюблених
+function handle_favorite_button_click() {
+    // Перевірка, чи користувач авторизований
+    if (!is_user_logged_in()) {
+        wp_send_json_error(array('message' => 'Ви повинні бути авторизовані.'));
+    }
+
+    $user_id = get_current_user_id();
+    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+
+    if (!$post_id) {
+        wp_send_json_error(array('message' => 'Невірний ID поста.'));
+    }
+
+    $favorites = get_user_meta($user_id, 'customfavorites', true) ?: [];
+
+    if (in_array($post_id, $favorites)) {
+        // Видалити з улюблених
+        $favorites = array_diff($favorites, array($post_id));
+        update_user_meta($user_id, 'customfavorites', $favorites);
+        wp_send_json_success(array('message' => 'Додати до улюблених'));
+    } else {
+        // Додати до улюблених
+        $favorites[] = $post_id;
+        update_user_meta($user_id, 'customfavorites', $favorites);
+        wp_send_json_success(array('message' => 'Додано'));
+    }
+}
+
+add_action('wp_ajax_toggle_favorite', 'handle_favorite_button_click');
+
+
+// Додаємо скрипт для обробки AJAX запиту
+function add_favorite_button_ajax_script() {
+    wp_enqueue_script('add-favorite-button-ajax', get_template_directory_uri() . '/assets/js/add-favorite-button-ajax.js', array('jquery'), null, true);
+    wp_localize_script('add-favorite-button-ajax', 'myFavoritesData', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('custom_favorites_nonce'),
+    ]);
+}
+add_action('wp_footer', 'add_favorite_button_ajax_script'); // Підключаємо скрипт в footer
+
+
+
+
+function get_user_favorite_posts() {
+    $user_id = get_current_user_id();
+
+    if ($user_id === 0) {
+        echo '<p>Ви не авторизовані.</p>';
+        exit;
+    }
+
+    // Отримуємо улюблені пости з мета-даних користувача
+    $favorites = get_user_meta($user_id, 'customfavorites', true) ?: [];
+
+    if (empty($favorites)) {
+        echo '<p style="font-size:20px; color: #046BD2;">У вас немає улюблених постів.</p>';
+    } else {
+        echo '<p style="font-size:20px; color: #046BD2;">Мої улюблені пости</p>';
+    }
+
+    // Формуємо HTML для улюблених постів
+    $favorite_posts_html = '<div class="favorite-posts">';
+    foreach ($favorites as $post_id) {
+        $post = get_post($post_id);
+
+        if ($post) {
+            $favorite_posts_html .= '<div class="favorite-post" id="favorite-post-' . esc_attr($post_id) . '">';
+            $favorite_posts_html .= '<a href="' . esc_url(get_permalink($post)) . '">';
+            $favorite_posts_html .= '<p>' . esc_html(get_the_title($post)) . '</p>';
+            $favorite_posts_html .= '</a>';
+            $favorite_posts_html .= '<span class="remove-favorite" data-post-id="' . esc_attr($post_id) . '">&times;</span>';
+            $favorite_posts_html .= '</div>';
+        }
+    }
+    $favorite_posts_html .= '</div>';
+    wp_enqueue_script('remove-all-posts', get_template_directory_uri() . '/assets/js/remove-all-posts.js', array('jquery'), null, true);
+    wp_localize_script('remove-all-posts', 'myFavoritesData', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('custom_favorites_nonce'),
+    ]);
+    wp_enqueue_style('favorites-posts-list', get_template_directory_uri() . '/assets/css/favorites-posts-list.css');
+
+    // Виводимо HTML
+    echo $favorite_posts_html;
+}
+
+add_action('wp_ajax_get_user_favorite_posts', 'get_user_favorite_posts');
+
+
+function favorite_remove_all_button(): string {
+    // Перевіряємо, чи є користувач авторизованим
+    $user_id = get_current_user_id();
+    if ($user_id === 0) {
+        return '<p>Ви не авторизовані.</p>';
+    }
+
+    // Отримуємо улюблені пости користувача
+    $favorites = get_user_meta($user_id, 'customfavorites', true) ?: [];
+
+    // Якщо немає улюблених постів, не виводимо кнопку
+    if (empty($favorites)) {
+        return '';
+    }
+
+    // HTML для кнопки "Все видалити"
+    $button_html = '<button class="remove-all-favorites-button" id="remove-all-favorites">Все видалити</button>';
+
+    // Підключаємо стилі через wp_enqueue_style
+    wp_enqueue_style('remove-all-favorites-style', get_template_directory_uri() . '/assets/css/remove-all-favorites.css');
+
+    return $button_html;
+}
+
+add_shortcode('remove_all_favorites', 'favorite_remove_all_button');
+
+
+
+
+
+function custom_user_favorites_shortcode() {
+    if (is_admin()) {
+        return ''; // Не виводити нічого в адмінці
+    }
+    ob_start();
+    get_user_favorite_posts(); // Виводить HTML
+    return ob_get_clean(); // Повертає результат виведення
+}
+add_shortcode('custom_user_favorites', 'custom_user_favorites_shortcode');
+
+
+// Локалізуємо ajaxurl
+function custom_favorites_scripts() {
+    wp_enqueue_script('custom-favorites', get_template_directory_uri() . '/assets/js/custom_favorites.js', ['jquery'], null, true);
+    wp_localize_script('custom-favorites', 'myFavoritesData', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('custom_favorites_nonce'),
+    ]);
+}
+add_action('wp_enqueue_scripts', 'custom_favorites_scripts');
+
+// Функція для додавання постів до улюблених
+function add_to_favorites() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['post_id']) || $_POST['action'] !== 'add_favorite') {
         echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
         wp_die();
     }
+
+    check_ajax_referer('custom_favorites_nonce', 'security');
 
     $post_id = intval($_POST['post_id']);
     $user_id = get_current_user_id();
@@ -756,65 +761,130 @@ function remove_favorite_post() {
         wp_die();
     }
 
-    $favorites = get_user_meta($user_id, 'simplefavorites', true);
+    $favorites = get_user_meta($user_id, 'customfavorites', true);
 
-    if ($favorites && !is_array($favorites)) {
-        $favorites = unserialize($favorites);
+    if (!$favorites || !is_array($favorites)) {
+        $favorites = [];
     }
 
-    if (!$favorites) {
-        echo json_encode(['status' => 'error', 'message' => 'No favorites found']);
-        wp_die();
-    }
-
-    // Зберігаємо стару копію для відповіді
-    $old_favorites = $favorites;
-
-    // Видаляємо пост з масиву
-    if (isset($favorites[0]['posts']) && is_array($favorites[0]['posts'])) {
-        $key = array_search($post_id, $favorites[0]['posts']);
-        if ($key !== false) {
-            unset($favorites[0]['posts'][$key]);
-            $favorites[0]['posts'] = array_values($favorites[0]['posts']);
-        }
-    }
-
-    // Видаляємо пост з груп
-    if (isset($favorites[0]['groups']) && is_array($favorites[0]['groups'])) {
-        foreach ($favorites[0]['groups'] as &$group) {
-            if (isset($group['posts']) && is_array($group['posts'])) {
-                $key = array_search($post_id, $group['posts']);
-                if ($key !== false) {
-                    unset($group['posts'][$key]);
-                    $group['posts'] = array_values($group['posts']);
-                }
-            }
-        }
-        unset($group);
-    }
-
-    // Оновлюємо метаінформацію
-    $updated_favorites = serialize($favorites);
-    $update_success = update_user_meta($user_id, 'simplefavorites', $updated_favorites);
-
-    if ($update_success) {
-        // Формуємо `preview` та `response` у потрібному форматі
-        $response = [
-            'status' => 'success',
-            'old_favorites' => $old_favorites,
-            'favorites' => $favorites
-        ];
-        echo json_encode($response);
+    if (!in_array($post_id, $favorites)) {
+        $favorites[] = $post_id;
+        update_user_meta($user_id, 'customfavorites', $favorites);
+        echo json_encode(['status' => 'success', 'message' => 'Post added to favorites']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update favorites']);
+        echo json_encode(['status' => 'error', 'message' => 'Post is already in favorites']);
     }
 
     wp_die();
 }
-add_action('wp_ajax_remove_favorite', 'remove_favorite_post');
+add_action('wp_ajax_add_favorite', 'add_to_favorites');
+
+//Створення AJAX-функції для видалення постів із улюблених
+function remove_favorite_post() {
+    if (!check_ajax_referer('custom_favorites_nonce', 'security', false)) {
+        wp_send_json_error(['message' => 'Неправильний нонсе.'], 403);
+    }
+
+    $post_id = intval($_POST['post_id']);
+    $user_id = get_current_user_id();
+
+    if (!$user_id || !$post_id) {
+        wp_send_json_error(['message' => 'Некоректні дані.'], 400);
+    }
+
+    $favorites = get_user_meta($user_id, 'customfavorites', true) ?: [];
+    if (!in_array($post_id, $favorites)) {
+        wp_send_json_error(['message' => 'Цього посту немає в улюблених.']);
+    }
+
+    // Видаляємо пост з масиву улюблених
+    $favorites = array_diff($favorites, [$post_id]);
+    update_user_meta($user_id, 'customfavorites', $favorites);
+
+    // Якщо улюблених постів більше немає, очищаємо customfavorites
+    if (empty($favorites)) {
+        delete_user_meta($user_id, 'customfavorites');
+    }
+
+    wp_send_json_success(['message' => 'Пост успішно видалено.']);
+}
 
 
-// створення шорткоду для статичних постів
+add_action('wp_ajax_remove_favorite_post', 'remove_favorite_post');
+
+
+function remove_all_favorites() {
+    if (!check_ajax_referer('custom_favorites_nonce', 'security', false)) {
+        wp_send_json_error(['message' => 'Неправильний нонсе.'], 403);
+    }
+
+    $user_id = get_current_user_id();
+    if ($user_id === 0) {
+        wp_send_json_error(['message' => 'Ви не авторизовані.']);
+    }
+
+    // Очищуємо улюблені пости
+    delete_user_meta($user_id, 'customfavorites');
+
+    wp_send_json_success(['message' => 'Усі пости видалено.']);
+}
+
+add_action('wp_ajax_remove_all_favorites', 'remove_all_favorites');
+
+
+// Функція для виведення кількості улюблених постів
+function favorite_count_shortcode()
+{
+    $user_id = get_current_user_id();
+
+    // Якщо користувач авторизований
+    if ($user_id !== 0) {
+        // Отримуємо улюблені пости користувача
+        $favorites = get_user_meta($user_id, 'customfavorites', true) ?: [];
+        // Кількість улюблених постів
+        $favorite_count = count($favorites);
+    } else {
+        // Якщо користувач не авторизований, кількість = 0
+        $favorite_count = 0;
+    }
+    wp_enqueue_script('favorite-count', get_template_directory_uri() . '/assets/js/favorite-count.js', array('jquery'), null, true);
+    wp_localize_script('favorite-count', 'myFavoritesData', [
+        'ajaxurl' => admin_url('admin-ajax.php')
+    ]);
+//     Повертаємо кількість улюблених постів
+    return $favorite_count;
+}
+
+// Реєстрація шорткоду [favorite_count]
+add_shortcode('favorite_count', 'favorite_count_shortcode');
+
+
+function update_favorite_count() {
+    $user_id = get_current_user_id();
+
+    // Перевіряємо, чи користувач авторизований
+    if ($user_id !== 0) {
+        // Отримуємо улюблені пости користувача
+        $favorites = get_user_meta($user_id, 'customfavorites', true) ?: [];
+
+        // Повертаємо кількість улюблених постів
+        echo count($favorites);
+    } else {
+        echo 0;
+    }
+
+    wp_die(); // Завершуємо виконання після AJAX запиту
+}
+
+add_action('wp_ajax_update_favorite_count', 'update_favorite_count');
+
+
+
+/**
+ *
+ * Створення шорткоду для статичних постів
+ *
+ */
 function custom_post_shortcode($atts) {
     // Атрибути шорткоду з дефолтними значеннями
     $atts = shortcode_atts(array(
@@ -848,38 +918,7 @@ add_shortcode('custom_post', 'custom_post_shortcode');
 
 
 function custom_post_styles() {
-    echo '
-    <style type="text/css">
-    .custom-post {
-        display: flex; /* Flexbox для горизонтального вирівнювання елементів */
-        justify-content: flex-start; /* Вирівнює елементи по горизонталі на ліво */
-        align-items: center; /* Вирівнювання елементів по вертикалі (зображення та текст) */
-        margin-bottom: 15px; /* Відстань між постами */
-        padding: 10px;
-        border: 1px solid #ddd; /* Рамка навколо кожного посту */
-        border-radius: 5px; /* Краї з округленими кутами (опційно) */
-        transition: transform 0.3s ease, color 0.3s ease;
-        background-color: rgba(4, 107, 210, 0.07);
-    }
-
-    .custom-post:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(4, 107, 210, 0.3);
-    }
-
-    .custom-post img {
-        max-width: 100px; /* Зображення меншого розміру */
-        height: auto;
-        margin-right: 15px; /* Відступ між зображенням і текстом */
-        order: -1; /* Переміщає зображення вліво */
-    }
-
-    .custom-post p {
-        margin: 0;
-        font-size: 16px; /* Розмір шрифта для заголовка */
-    }
-    </style>
-    ';
+    wp_enqueue_style('custom-post-style', get_template_directory_uri() . '/assets/css/custom-post-style.css');
 }
 add_action('wp_head', 'custom_post_styles');
 

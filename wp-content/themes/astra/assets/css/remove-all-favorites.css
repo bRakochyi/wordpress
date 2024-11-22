@@ -1,0 +1,15 @@
+.remove-all-favorites-button {
+    padding: 12px 25px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    background-color: #046BD2;
+    color: #fff;
+    border: 1px solid #046BD2;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.remove-all-favorites-button:hover {
+    background-color: #0583F2;
+    transform: scale(1.09);
+}
