@@ -1,0 +1,24 @@
+.favorite-button.favorite-added {
+    background-color: #0583F2; /* Колір фону для стану "Додано" */
+    color: #fff; /* Колір тексту */
+    border: 1px solid #0583F2; /* Колір рамки */
+    cursor: pointer; /* Змінює курсор, щоб вказати, що кнопка неактивна */
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.favorite-button.favorite-added:hover {
+    background-color: #379DEB; /* Трохи темніший колір при наведенні */
+    transform: scale(1.09);
+}
+.favorite-button.add-to-favorites {
+    background-color: #046BD2; /* Колір фону для стану "Додано" */
+    color: #fff; /* Колір тексту */
+    border: 1px solid #046BD2; /* Колір рамки */
+    cursor: pointer; /* Змінює курсор, щоб вказати, що кнопка неактивна */
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.favorite-button.add-to-favorites:hover {
+    background-color: #0583F2; /* Трохи темніший колір при наведенні */
+    transform: scale(1.09);
+}

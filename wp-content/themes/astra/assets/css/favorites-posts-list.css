@@ -1,0 +1,44 @@
+.favorite-posts {
+    display: flex;
+    flex-direction: column; /* Розташування постів вертикально */
+    gap: 15px; /* Відстань між постами */
+}
+
+.favorite-post {
+    display: flex; /* Flexbox для горизонтального вирівнювання елементів */
+    justify-content: flex-start; /* Вирівнює елементи по горизонталі вліво */
+    align-items: center; /* Вирівнювання елементів по вертикалі */
+    padding: 10px;
+    border: 1px solid #ddd; /* Рамка навколо кожного посту */
+    border-radius: 5px; /* Округлені кути */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: rgba(4, 107, 210, 0.07);
+}
+
+.favorite-post:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(4, 107, 210, 0.3);
+}
+
+
+.favorite-post p {
+    margin: 0;
+    font-size: 16px; /* Розмір шрифту для заголовка */
+    color: #046BD2; /* Колір тексту */
+}
+
+.remove-favorite {
+    position: absolute; /* Абсолютне позиціювання */
+    top: 1px; /* Відступ від верхнього краю */
+    right: 1px; /* Відступ від правого краю */
+    font-size: 24px;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.remove-favorite:hover {
+    transform: scale(1.2);
+    color: #ff0000;
+}
