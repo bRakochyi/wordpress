@@ -5,6 +5,7 @@
 }
 
 .favorite-post {
+    position: relative;
     display: flex; /* Flexbox для горизонтального вирівнювання елементів */
     justify-content: flex-start; /* Вирівнює елементи по горизонталі вліво */
     align-items: center; /* Вирівнювання елементів по вертикалі */
@@ -28,6 +29,7 @@
 }
 
 .remove-favorite {
+    display: none;
     position: absolute; /* Абсолютне позиціювання */
     top: 1px; /* Відступ від верхнього краю */
     right: 1px; /* Відступ від правого краю */
@@ -41,4 +43,8 @@
 .remove-favorite:hover {
     transform: scale(1.2);
     color: #ff0000;
+}
+
+.favorite-post:hover .remove-favorite {
+    display: block; /* Робимо хрестик видимим тільки при наведенні */
 }
