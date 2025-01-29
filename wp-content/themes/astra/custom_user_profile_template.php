@@ -119,7 +119,7 @@ endif;
 
     <p> </p>
     <input class="edit-page-button-back" type="button"
-           onclick="window.location.href = 'http://localhost/wordpress/index.php/account'" value="Назад">
+           onclick="window.location.href = 'https://wiki.lep.com.ua/index.php/account'" value="Назад">
     <button class="edit-page-button-save" style="margin-left: 15px;">Зберегти</button>
 
 </form>
