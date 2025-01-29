@@ -21,7 +21,7 @@ add_action( 'login_head', 'true_change_login_logo' );
 function true_change_login_logo() {
     echo '<style>
 	#login h1 a{
-		background-image : url(http://localhost/wordpress/wp-content/uploads/2024/10/141174_company_logo_1.png);
+		background-image : url(https://wiki.lep.com.ua/wp-content/uploads/2024/10/141174_company_logo_1.png);
 		width: 200px;
 		height: 100px;
 	}
@@ -31,7 +31,7 @@ function true_change_login_logo() {
 add_filter( 'login_headerurl', 'wpspec_custom_login_logo_url' );
 
 function wpspec_custom_login_logo_url() {
-    return 'http://localhost/wordpress/';
+    return 'https://wiki.lep.com.ua/';
 }
 
 add_filter( 'login_headertext', 'wpspec_custom_login_logo_url_title' );

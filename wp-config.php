@@ -20,16 +20,16 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'mysite' );
+define( 'DB_NAME', 'ku390918_wikilep' );
 
 /** Database username */
-define( 'DB_USER', 'user' );
+define( 'DB_USER', 'ku390918_wikilep' );
 
 /** Database password */
-define( 'DB_PASSWORD', 'password' );
+define( 'DB_PASSWORD', '43BH^7tf)a' );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', 'ku390918.mysql.tools' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
@@ -82,8 +82,8 @@ $table_prefix = 'wpgg_';
 /** On error */
 error_reporting(0); // включаем вывод ошибок
 ini_set('display_errors', 0); // включаем вывод ошибок на экран
-define('WP_DEBUG', true);
-define('WP_DEBUG_LOG', true);
+define('WP_DEBUG', false);
+define('WP_DEBUG_LOG', false);
 define('WP_DEBUG_DISPLAY', false);
 
 define( 'ALLOW_UNFILTERED_UPLOADS', true );

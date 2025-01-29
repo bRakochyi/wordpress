@@ -88,7 +88,7 @@ if( !$user_ID ) {
         </tr>
         <tr><th><p class="text-color">Для зміни Ваших даних натисніть кнопку "Змінити"</p></th>
             <td>
-                <form class="edit-button" action="http://localhost/wordpress/index.php/edit-account">
+                <form class="edit-button" action="https://wiki.lep.com.ua/index.php/edit-account">
                     <button>Змінити</button>
 
                 </form>
@@ -96,7 +96,7 @@ if( !$user_ID ) {
         </tr>
         <tr><th><p class="text-color">Щоб переглянути збережені (улюблені) інструкції натисніть "Перейти"</p></th>
             <td>
-                <form class="edit-button" action="http://localhost/wordpress/index.php/my-favorites">
+                <form class="edit-button" action="https://wiki.lep.com.ua/index.php/my-favorites">
                     <button>Перейти</button>
 
                 </form>
