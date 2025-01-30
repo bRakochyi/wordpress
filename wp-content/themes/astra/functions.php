@@ -377,7 +377,7 @@ $result = add_role('director', __('Директор'),
         'setup_network' => false,
         'upgrade_network' => false
     ));
-
+require_once "remove_roles.php";
 // встановлення ролей з файлу (операція виконується тільки один раз)
 require_once "roles_lep.php";
 
@@ -439,77 +439,109 @@ function save_user_role( $user_id ) {
         $department = sanitize_text_field($_POST['department']);
         $selected_role = sanitize_text_field($_POST['role']);
 
-        // Призначаємо ролі відповідно до вибору
+        // Визначення ролі на основі масиву options
+        $options = [
+            'tov_lep' => [
+                "Відділ постачання" => [
+                    "manager_postachaniia_vp" => "Менеджер з постачання",
+                    "office_admin_vp" => "Офісний адміністратор",
+                    "ing_comp_sys_vp" => "Інженер комп'ютерних систем",
+                    "designer_graf_vp" => "Дизайнер графіки",
+                    "manager_zbutu_vp" => "Менеджер із збуту",
+                    "marketolog_vp" => "Маркетолог"
+                ],
+                "Відділ дистриб'юції" => [
+                    "manager_zbutu_vd" => "Менеджер із збуту",
+                    "ing_comp_sys_vd" => "Інженер комп'ютерних систем",
+                    "bukhhalter_vd" => "Бухгалтер",
+                    "region_manager_zbutu_vd" => "Регіональний менеджер із збуту"
+                ],
+                "Офісний відділ" => [
+                    "manager_zbutu_of" => "Менеджер із збуту",
+                    "economist_of" => "Економіст",
+                    "nachalnic_viddilu_of" => "Начальник відділу"
+                ],
+                "Технічний відділ" => [
+                    "zav_po_hosp_tv" => "Завідуючий по господарчій частині",
+                    "el_mont_rozpod_pr_tv" => "Електромонтажник розподільчих пристроїв",
+                    "nachalnic_viddilu_tv" => "Начальник відділу",
+                    "ing_comp_sys_tv" => "Інженер компютерних систем",
+                    "ingener_construct_tv" => "Інженер конструктор"
+                ],
+                "Складський відділ" => [
+                    "golov_komirnuk_sv" => "Головний комірник",
+                    "starsh_komirnuk_sv" => "Старший комірник",
+                    "komirnuk_sv" => "Комірник"
+                ],
+                "Адміністрація" => [
+                    "director_ad" => "Директор",
+                    "zastup_directora_ad" => "Заступник директора"
+                ],
+                "Магазин Амперок" => [
+                    "manager_zbutu_ma" => "Менеджер із збуту",
+                    "ing_comp_sys_ma" => "Інженер компютерних систем",
+                    "admin_amperok_ma" => "Адміністратор",
+                    "paymaster_zalu_ma" => "Касир залу",
+                    "bukhhalter_ma" => "Бухгалтер"
+                ],
+                "Транспортний відділ" => [
+                    "vodiy_tra" => "Водій",
+                    "dispetcher_tra" => "Диспетчер",
+                    "Ingener_praci_tra" => "Інженер з охорони праці",
+                    "mekhanik_tra" => "Механік",
+                    "ekspeditor_tra" => "Експедитор",
+                    "medsestra_tra" => "Медсестра"
+                ],
+                "Бухгалтерія" => [
+                    "logist_bukh" => "Логіст",
+                    "bukhhalter_bukh" => "Бухгалтер",
+                    "programist_bukh" => "Програміст",
+                    "ing_comp_sys_bukh" => "Інженер компютерних систем",
+                    "economist_bukh" => "Економіст",
+                    "golov_bukhhalter_bukh" => "Головний бухгалтер"
+                ],
+                "Інтернет магазин" => [
+                    "manager_zbutu_int" => "Менеджер із збуту"
+                ],
+                "Сервісний відділ" => [
+                    "mont_radioel_pr_serv" => "Монтажник радіоелектронних апаратів та приладів",
+                    "nachalnic_viddilu_serv" => "Начальник відділу"
+                ]
+            ],
+            'eloter' => [
+                "Елотер" => [
+                    "director_el" => "Директор",
+                    "golov_bukhhalter_el" => "Головний бухгалтер",
+                    "bukhhalter_el" => "Бухгалтер",
+                    "manager_postachaniia_el" => "Менеджер з постачання",
+                    "economist_el" => "Економіст",
+                    "ingener_el" => "Інженер",
+                    "manager_zbutu_el" => "Менеджер із збуту",
+                    "office_admin_el" => "Офіс адміністратор",
+                    "ekspeditor_el" => "Експедитор",
+                    "ing_comp_sys_el" => "Інженер компютерних систем",
+                    "komirnuk_el" => "Комірник",
+                    "starsh_komirnuk_el" => "Старший комірник",
+                    "manager_logist_el" => "Менеджер з логістики"
+                ]
+            ]
+        ];
 
+        // Визначаємо ключ ролі
+        $role = '';
+        if (isset($options[$organization][$department])) {
+            $roles_list = $options[$organization][$department];
+            $role = array_search($selected_role, $roles_list);
+        }
 
-        if ($organization === 'tov_lep') {
-            if ($department === 'Відділення дистриб\'юції') {
-                $role = 'distribution_manager';
-            } elseif ($department === 'Відділення постачання') {
-                $role = 'postachannya_manager';
-            } elseif ($department === 'Офісний відділ') {
-                $role = 'office_worker';
-            } elseif ($department === 'Дирекція') {
-                $role = 'director';
-            } elseif ($department === 'Бухгалтерія') {
-                if ($selected_role === 'Бухгалтер') {
-                    $role = 'bukhhalter';
-                } elseif ($selected_role === 'Касир ЛЕП') {
-                    $role = 'paymaster_lep';
-                }
-            } elseif ($department === 'Технічний відділ') {
-                $role = 'technik';
-            } elseif ($department === 'Транспортний відділ') {
-                if ($selected_role === 'Механік') {
-                    $role = 'mekhanik';
-                } elseif ($selected_role === 'Водій') {
-                    $role = 'vodij';
-                }
-            } elseif ($department === 'Охорона') {
-                $role = 'security';
-            } elseif ($department === 'Складський відділ') {
-                $role = 'sklad_worker';
-            }
-        } elseif ($organization === 'eloter') {
-            if ($department === 'Елотер') {
-                $role = 'eloter_worker';
-            }
-        } elseif ($organization === 'amperok') {
-            if ($department === 'Амперок магазин') {
-                if ($selected_role === 'Адміністратор амперок магазин') {
-                    $role = 'admin_amperok_store';
-                } elseif ($selected_role === 'Менеджер амперок магазин') {
-                    $role = 'manager_amperok_store';
-                } elseif ($selected_role === 'Касир амперок магазин') {
-                    $role = 'paymaster_amperok_store';
-                } elseif ($selected_role === 'Працівник амперок магазин') {
-                    $role = 'amperok_worker_store';
-                }
-
-            } elseif ($department === 'Амперок інтернет') {
-                if ($selected_role === 'Адміністратор амперок інтернет') {
-                    $role = 'admin_amperok_internet';
-                } elseif ($selected_role === 'Менеджер амперок інтернет') {
-                    $role = 'manager_amperok_internet';
-                } elseif ($selected_role === 'Контент менеджер амперок інтернет') {
-                    $role = 'content_manager_amperok_internet';
-                }
-            }
+        // Призначаємо роль користувачу
+        if ($role && array_key_exists($role, wp_roles()->roles)) {
+            $user = new WP_User($user_id);
+            $user->set_role($role);
         }
     }
-
-
-    if (array_key_exists($role, wp_roles()->roles)) {
-        $user = new WP_User($user_id);
-        $user->set_role($role);
-
-    } else {
-        $user = new WP_User($user_id);
-        $user->set_role('distribution_manager');
-    }
-
 }
-add_action( 'user_register', 'save_user_role');
+add_action('user_register', 'save_user_role');
 
 // видалення запису перед таблицею коментаря
 function remove_logged_in_message() {
